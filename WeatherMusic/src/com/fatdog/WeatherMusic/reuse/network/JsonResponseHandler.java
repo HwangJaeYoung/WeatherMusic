@@ -11,8 +11,8 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 public class JsonResponseHandler extends JsonHttpResponseHandler {
     private HttpRequester.NetworkResponseListener networkResponseListener;
     
-    private static final String PARM_RESULT = "result";
-    private static final String RESULT_SUCCESS = "success";
+    private static final String PARM_RESPONSE = "response";
+    private static final String RESULT_SUCCESS = "body";
     private static final String RESULT_FAIL = "fail";
     private static final String PARM_ERROR_CODE = "error_code";
     public static final String PARM_DATA = "data";
@@ -36,7 +36,7 @@ public class JsonResponseHandler extends JsonHttpResponseHandler {
         Log.i("JsonResponseHandler",""+response.toString());
         Log.e("attach", response.toString());
         try {
-            if(response.getString(PARM_RESULT).equals(RESULT_SUCCESS)){
+            if(response.getString(PARM_RESPONSE).equals(RESULT_SUCCESS)){
                 this.networkResponseListener.onSuccess(response);
             }else if(response.getString(PARM_RESULT).equals(RESULT_FAIL))
                 this.networkResponseListener.onFail(response, response.getInt(PARM_ERROR_CODE));

@@ -10,8 +10,8 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class HttpRequester {
-    private static final String BASE_URL = "http://photocoapi-env-x2ezvferc7.elasticbeanstalk.com";
-
+    private static final String BASE_URL = "http://newsky2.kma.go.kr/service/SecndSrtpdFrcstInfoService/";
+  
     private static AsyncHttpClient client = new AsyncHttpClient();
 
     public static void post(String url, RequestParams params, JsonHttpResponseHandler responseHandler, Context aContext) {

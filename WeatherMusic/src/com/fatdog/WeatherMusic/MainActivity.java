@@ -3,6 +3,9 @@ package com.fatdog.WeatherMusic;
 import java.io.IOException;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -17,6 +20,11 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.fatdog.WeatherMusic.reuse.etc.DateCalculate;
+import com.fatdog.WeatherMusic.reuse.network.CurrentWeatherNetwork;
+import com.fatdog.WeatherMusic.reuse.network.HttpRequester;
 
 public class MainActivity extends Activity {
 	private Geocoder coder;
@@ -141,8 +149,6 @@ public class MainActivity extends Activity {
 	public void searchLocation() {
 		String si = null;
 		String gu = null;
-		
-		Log.i("location", lattitude + ", "+ longitude); 
 
 		try {
 			list = coder.getFromLocation(lattitude, longitude, 6);
@@ -163,8 +169,34 @@ public class MainActivity extends Activity {
 
 		finalLocation = si + " " + gu;
 		logoText.setText(finalLocation);
-
+		getCurrentWeather( );
 	}
+	
+	public void getCurrentWeather( ) {
+		
+		DateCalculate date = new DateCalculate();
+		
+		CurrentWeatherNetwork CurrentWeatherNetwork = new CurrentWeatherNetwork(getApplicationContext());
+		try {
+			CurrentWeatherNetwork.getCurrentWeather(getCurrentState, date.getPastDate(), 62, 126);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	HttpRequester.NetworkResponseListener getCurrentState = new HttpRequester.NetworkResponseListener() {
+		
+		@Override
+		public void onSuccess(JSONObject jsonObject) {
+			Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
+		}
+		
+		@Override
+		public void onFail(JSONObject jsonObject, int errorCode) {
+			
+			
+		}
+	}; 
     
     @Override
 	protected void onPause() {
@@ -222,7 +254,6 @@ public class MainActivity extends Activity {
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.cancel();
-						//overridePendingTransition(R.anim.grow_from_middle, R.anim.shrink_to_middle);
 						finish(); // 종료
 					}
 				});
