@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -12,18 +13,8 @@ public class JsonResponseHandler extends JsonHttpResponseHandler {
     private HttpRequester.NetworkResponseListener networkResponseListener;
     
     private static final String PARM_RESPONSE = "response";
-    private static final String RESULT_SUCCESS = "body";
-    private static final String RESULT_FAIL = "fail";
-    private static final String PARM_ERROR_CODE = "error_code";
-    public static final String PARM_DATA = "data";
-    
-    public static final int ERROR_CODE_NETWORK_UNAVAILABLE = -1;
-    public static final int ERROR_CODE_PASSWORDS_ARE_NOT_IDENTICAL = 1;
-    public static final int ERROR_CODE_MISSING_USERNAME = 2;
-    public static final int ERROR_CODE_ALREADY_EXIST_USERNAME = 3;
-    public static final int ERROR_CODE_ID_NOT_EXIST = 4;
-    public static final int ERROR_CODE_PASSWORD_INCORRECT = 5;
-    public static final int ERROR_CODE_HAVE_TO_LOGIN = 7;
+    private static final String PARM_BODY = "body";
+    private static final String PARM_ITEMS = "items";    
 
     public JsonResponseHandler(HttpRequester.NetworkResponseListener aNetworkResponseListener) {
         this.networkResponseListener = aNetworkResponseListener;
@@ -33,22 +24,16 @@ public class JsonResponseHandler extends JsonHttpResponseHandler {
     // Fired when a request returns successfully
     @Override
     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-        Log.i("JsonResponseHandler",""+response.toString());
-        Log.e("attach", response.toString());
         try {
-            if(response.getString(PARM_RESPONSE).equals(RESULT_SUCCESS)){
-                this.networkResponseListener.onSuccess(response);
-            }else if(response.getString(PARM_RESULT).equals(RESULT_FAIL))
-                this.networkResponseListener.onFail(response, response.getInt(PARM_ERROR_CODE));
-        } catch (JSONException e) { }
+			this.networkResponseListener.onSuccess(response.getJSONObject(PARM_RESPONSE).getJSONObject(PARM_BODY).getJSONObject(PARM_ITEMS));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
     }
 
     // Returns when request failed
     @Override
     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-    	if(statusCode == 0) {
-            this.networkResponseListener.onFail(new JSONObject(), ERROR_CODE_NETWORK_UNAVAILABLE);
-        }
-        else { }
+    	this.networkResponseListener.onFail( );
     }
 }

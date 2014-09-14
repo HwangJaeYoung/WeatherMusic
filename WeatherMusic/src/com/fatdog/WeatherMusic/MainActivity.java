@@ -3,6 +3,7 @@ package com.fatdog.WeatherMusic;
 import java.io.IOException;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,8 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fatdog.WeatherMusic.reuse.etc.DateCalculate;
-import com.fatdog.WeatherMusic.reuse.network.CurrentWeatherNetwork;
 import com.fatdog.WeatherMusic.reuse.network.HttpRequester;
+import com.fatdog.WeatherMusic.reuse.network.TomorrowWeatherNetwork;
 
 public class MainActivity extends Activity {
 	private Geocoder coder;
@@ -168,33 +169,72 @@ public class MainActivity extends Activity {
 		}
 
 		finalLocation = si + " " + gu;
-		logoText.setText(finalLocation);
 		getCurrentWeather( );
 	}
 	
 	public void getCurrentWeather( ) {
 		
 		DateCalculate date = new DateCalculate();
+		date.calculateDate();
 		
-		CurrentWeatherNetwork CurrentWeatherNetwork = new CurrentWeatherNetwork(getApplicationContext());
+		TomorrowWeatherNetwork tomorrowWeatherNetwork = new TomorrowWeatherNetwork(getApplicationContext());
 		try {
-			CurrentWeatherNetwork.getCurrentWeather(getCurrentState, date.getPastDate(), 62, 126);
+			tomorrowWeatherNetwork.getTomorrowWeather(getTomorrowState, date.getToday(), 62, 126);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	HttpRequester.NetworkResponseListener getCurrentState = new HttpRequester.NetworkResponseListener() {
+	// 내일의 최저기온 / 최고기온을 가지고오는 통신을 한다.
+	HttpRequester.NetworkResponseListener getTomorrowState = new HttpRequester.NetworkResponseListener() {
 		
 		@Override
 		public void onSuccess(JSONObject jsonObject) {
-			Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
+			
+			DateCalculate date = new DateCalculate();
+			date.calculateDate();
+			
+			JSONArray jsonArray = new JSONArray( );
+			double fsctValueTMN = 0.0, fsctValueTMX = 0.0;
+			
+			try {
+				jsonArray = jsonObject.getJSONArray("item");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
+			for(int i = 0; i < jsonArray.length(); i++)	{
+				try {
+
+					JSONObject checkObject = jsonArray.getJSONObject(i);
+					
+					if (checkObject.getString("fcstDate").equals(date.getDayAfter())) {
+						if(checkObject.getString("category").equals("TMN") && checkObject.getString("fcstTime").equals("0600")) {
+							double tempFsctValue = Double.parseDouble(checkObject.getString("fcstValue"));
+						
+							if(tempFsctValue > 1)
+								fsctValueTMN = tempFsctValue;
+						}
+						else if(checkObject.getString("category").equals("TMX")) {
+							double tempFsctValue = Double.parseDouble(checkObject.getString("fcstValue"));
+						
+							if(tempFsctValue > 1)
+								fsctValueTMX = tempFsctValue;
+						}
+					}	
+				} catch (JSONException e) {
+				
+					e.printStackTrace();
+				}
+			}
+			
+			logoText.setText("최저기온 : " + fsctValueTMN + ", " + "최고기온 : " + fsctValueTMX);
+			
 		}
 		
 		@Override
-		public void onFail(JSONObject jsonObject, int errorCode) {
-			
-			
+		public void onFail( ) {
+			Toast.makeText(getApplicationContext(), R.string.json_error, Toast.LENGTH_SHORT).show();
 		}
 	}; 
     

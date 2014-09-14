@@ -39,6 +39,6 @@ public class HttpRequester {
     // 처리를 위해 공통적인 규약을 준것이다.
     public static interface NetworkResponseListener {
         public void onSuccess(JSONObject jsonObject);
-        public void onFail(JSONObject jsonObject, int errorCode);
+        public void onFail( );
     }
 }
