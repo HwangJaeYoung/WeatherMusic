@@ -5,9 +5,30 @@
     tools:context="${relativePackage}.${activityClass}" >
 
     <TextView
+        android:id="@+id/exam4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_world" />
+
+    <TextView
         android:id="@+id/exam"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/exam4"
+        android:text="@string/hello_world" />
+
+    <TextView
+        android:id="@+id/exam2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/exam"
+        android:text="@string/hello_world" />
+
+    <TextView
+        android:id="@+id/exam3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/exam2"
         android:text="@string/hello_world" />
 
 </RelativeLayout>

@@ -4,9 +4,6 @@ import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-import android.widget.Toast;
-
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class JsonResponseHandler extends JsonHttpResponseHandler {

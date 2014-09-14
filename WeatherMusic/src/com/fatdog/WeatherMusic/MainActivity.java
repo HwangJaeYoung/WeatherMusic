@@ -23,9 +23,12 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fatdog.WeatherMusic.domain.FutureWeather;
 import com.fatdog.WeatherMusic.reuse.etc.DateCalculate;
+import com.fatdog.WeatherMusic.reuse.network.CurrentWeatherRequest;
+import com.fatdog.WeatherMusic.reuse.network.FutureWeatherRequest;
 import com.fatdog.WeatherMusic.reuse.network.HttpRequester;
-import com.fatdog.WeatherMusic.reuse.network.TomorrowWeatherNetwork;
+import com.fatdog.WeatherMusic.reuse.network.TomorrowWeatherRequest;
 
 public class MainActivity extends Activity {
 	private Geocoder coder;
@@ -43,6 +46,9 @@ public class MainActivity extends Activity {
 	private LocationListener networkListener;
 	private LocationListener gpsListener;
 	private TextView logoText;
+	private TextView text2;
+	private TextView text3;
+	private TextView text4;
    
 	// 초기에 필요한 것들을 초기화 하는 생성자
 	public void initLogoSplash() {
@@ -57,6 +63,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         logoText = (TextView)findViewById(R.id.exam);
+        text2 = (TextView)findViewById(R.id.exam2);
+        text3 = (TextView)findViewById(R.id.exam3);
+        text4 = (TextView)findViewById(R.id.exam4);
         initLogoSplash(); // 초기화를 시키고
         defineLocation();
     }
@@ -169,17 +178,44 @@ public class MainActivity extends Activity {
 		}
 
 		finalLocation = si + " " + gu;
-		getCurrentWeather( );
+		getTodayWeather( );
+		getTomorrowWeather( );
+		getFutureWeather( );
 	}
 	
-	public void getCurrentWeather( ) {
-		
+	public void getTodayWeather( ) {
 		DateCalculate date = new DateCalculate();
 		date.calculateDate();
 		
-		TomorrowWeatherNetwork tomorrowWeatherNetwork = new TomorrowWeatherNetwork(getApplicationContext());
+		CurrentWeatherRequest currentWeatherRequest = new CurrentWeatherRequest(getApplicationContext());
 		try {
-			tomorrowWeatherNetwork.getTomorrowWeather(getTomorrowState, date.getToday(), 62, 126);
+			currentWeatherRequest.getTodayWeather(getCurrentState, date.getTomorrow(), 62, 126);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void getTomorrowWeather( ) {
+		DateCalculate date = new DateCalculate();
+		date.calculateDate();
+		
+		TomorrowWeatherRequest tomorrowWeatherRequest = new TomorrowWeatherRequest(getApplicationContext());
+		try {
+			tomorrowWeatherRequest.getTomorrowWeather(getTomorrowState, date.getToday(), 62, 126);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void getFutureWeather( ) {
+		DateCalculate date = new DateCalculate();
+		date.calculateDate();
+		
+		FutureWeatherRequest futureWeatherRequest = new FutureWeatherRequest(getApplicationContext());
+		
+		try {
+			futureWeatherRequest.getFutureWeather(getFutureState, "11B10101", date.getToday() + "0600");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -228,7 +264,7 @@ public class MainActivity extends Activity {
 				}
 			}
 			
-			logoText.setText("최저기온 : " + fsctValueTMN + ", " + "최고기온 : " + fsctValueTMX);
+			logoText.setText("내일 최저기온 : " + fsctValueTMN + ", " + "내일 최고기온 : " + fsctValueTMX);
 			
 		}
 		
@@ -237,15 +273,56 @@ public class MainActivity extends Activity {
 			Toast.makeText(getApplicationContext(), R.string.json_error, Toast.LENGTH_SHORT).show();
 		}
 	}; 
+	
+	HttpRequester.NetworkResponseListener getFutureState = new HttpRequester.NetworkResponseListener() {
+		
+		@Override
+		public void onSuccess(JSONObject jsonObject) {
+			JSONObject tempJSONObject = new JSONObject( );
+			FutureWeather futureWeather = null;
+			
+			try {
+				tempJSONObject = jsonObject.getJSONObject("item");
+				futureWeather = new FutureWeather(tempJSONObject);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		
+			text2.setText("최고기온 : " + futureWeather.getTaMax3() + ", "
+					 + futureWeather.getTaMax4() + ", "
+					 + futureWeather.getTaMax5() + ", "
+					 + futureWeather.getTaMax6() + ", "
+					 + futureWeather.getTaMax7() + ", "
+					 + futureWeather.getTaMax8());
+			
+			text3.setText("최저기온 : " + futureWeather.getTaMin3() + ", "
+					 + futureWeather.getTaMin4() + ", "
+					 + futureWeather.getTaMin5() + ", "
+					 + futureWeather.getTaMin6() + ", "
+					 + futureWeather.getTaMin7() + ", "
+					 + futureWeather.getTaMin8());
+		}
+		
+		@Override
+		public void onFail() {
+			Toast.makeText(getApplicationContext(), R.string.json_error, Toast.LENGTH_SHORT).show();	
+		}
+	};
     
-    @Override
-	protected void onPause() {
-		super.onPause();
-		// onPause되는 순간 위치 추적이 종료 된다.
-		locationManager.removeUpdates(networkListener);
-		locationManager.removeUpdates(gpsListener);
-	}
-    
+	HttpRequester.NetworkResponseListener getCurrentState = new HttpRequester.NetworkResponseListener() {
+		
+		@Override
+		public void onSuccess(JSONObject jsonObject) {
+		
+			
+		}
+		
+		@Override
+		public void onFail() {
+			
+			
+		}
+	};
 	// 네트워크 수신상태가 안좋거나 기타의 문제가 발생시에 호출
 	public void noLocationAlert() {
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
