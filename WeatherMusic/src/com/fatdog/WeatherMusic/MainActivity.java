@@ -23,9 +23,11 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fatdog.WeatherMusic.domain.FutureRainWeather;
 import com.fatdog.WeatherMusic.domain.FutureWeather;
 import com.fatdog.WeatherMusic.reuse.etc.DateCalculate;
 import com.fatdog.WeatherMusic.reuse.network.CurrentWeatherRequest;
+import com.fatdog.WeatherMusic.reuse.network.FutureRainWeatherRequest;
 import com.fatdog.WeatherMusic.reuse.network.FutureWeatherRequest;
 import com.fatdog.WeatherMusic.reuse.network.HttpRequester;
 import com.fatdog.WeatherMusic.reuse.network.TomorrowWeatherRequest;
@@ -49,6 +51,7 @@ public class MainActivity extends Activity {
 	private TextView text2;
 	private TextView text3;
 	private TextView text4;
+	private TextView text5;
    
 	// 초기에 필요한 것들을 초기화 하는 생성자
 	public void initLogoSplash() {
@@ -66,6 +69,8 @@ public class MainActivity extends Activity {
         text2 = (TextView)findViewById(R.id.exam2);
         text3 = (TextView)findViewById(R.id.exam3);
         text4 = (TextView)findViewById(R.id.exam4);
+        text5 = (TextView)findViewById(R.id.exam5);
+        
         initLogoSplash(); // 초기화를 시키고
         defineLocation();
     }
@@ -181,6 +186,7 @@ public class MainActivity extends Activity {
 		getTodayWeather( );
 		getTomorrowWeather( );
 		getFutureWeather( );
+		getFutureRainWeather( );
 	}
 	
 	public void getTodayWeather( ) {
@@ -189,7 +195,7 @@ public class MainActivity extends Activity {
 		
 		CurrentWeatherRequest currentWeatherRequest = new CurrentWeatherRequest(getApplicationContext());
 		try {
-			currentWeatherRequest.getTodayWeather(getCurrentState, date.getTomorrow(), 62, 126);
+			currentWeatherRequest.getTodayWeather(getCurrentState, date.getTomorrow(), date.getHour(), 62, 126);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -220,6 +226,53 @@ public class MainActivity extends Activity {
 			e.printStackTrace();
 		}
 	}
+	
+	public void getFutureRainWeather( ) {
+		DateCalculate date = new DateCalculate();
+		date.calculateDate();
+		
+		FutureRainWeatherRequest futureRainWeatherRequest = new FutureRainWeatherRequest(getApplicationContext()); 
+	
+		try {
+			futureRainWeatherRequest.getFutureRainWeather(getFutureRainState, "11B00000", date.getToday() + "0600");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	HttpRequester.NetworkResponseListener getCurrentState = new HttpRequester.NetworkResponseListener() {
+		
+		@Override
+		public void onSuccess(JSONObject jsonObject) {
+			JSONArray jsonArray = new JSONArray( );
+			String currentTemp = null;
+				
+			try {
+				jsonArray = jsonObject.getJSONArray("item");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
+			for(int i = 0; i < jsonArray.length(); i++) {
+				try {
+					JSONObject tempJSONObject = jsonArray.getJSONObject(i);
+					
+					if(tempJSONObject.getString("category").equals("T1H")) {
+						currentTemp = tempJSONObject.getString("obsrValue");
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+				text4.setText("현재기온 : " + currentTemp);
+			}
+		}
+		
+		@Override
+		public void onFail() {
+			Toast.makeText(getApplicationContext(), R.string.json_error, Toast.LENGTH_SHORT).show();	
+		}
+	};
 	
 	// 내일의 최저기온 / 최고기온을 가지고오는 통신을 한다.
 	HttpRequester.NetworkResponseListener getTomorrowState = new HttpRequester.NetworkResponseListener() {
@@ -288,14 +341,14 @@ public class MainActivity extends Activity {
 				e.printStackTrace();
 			}
 		
-			text2.setText("최고기온 : " + futureWeather.getTaMax3() + ", "
+			text2.setText("6일동안 최고기온 : " + futureWeather.getTaMax3() + ", "
 					 + futureWeather.getTaMax4() + ", "
 					 + futureWeather.getTaMax5() + ", "
 					 + futureWeather.getTaMax6() + ", "
 					 + futureWeather.getTaMax7() + ", "
 					 + futureWeather.getTaMax8());
 			
-			text3.setText("최저기온 : " + futureWeather.getTaMin3() + ", "
+			text3.setText("6일동안 최저기온 : " + futureWeather.getTaMin3() + ", "
 					 + futureWeather.getTaMin4() + ", "
 					 + futureWeather.getTaMin5() + ", "
 					 + futureWeather.getTaMin6() + ", "
@@ -309,17 +362,31 @@ public class MainActivity extends Activity {
 		}
 	};
     
-	HttpRequester.NetworkResponseListener getCurrentState = new HttpRequester.NetworkResponseListener() {
+	HttpRequester.NetworkResponseListener getFutureRainState = new HttpRequester.NetworkResponseListener() {
 		
 		@Override
 		public void onSuccess(JSONObject jsonObject) {
-		
+			JSONObject tempJSONObject = new JSONObject( );
+			FutureRainWeather futureRainWeather = null;
 			
+			try {
+				tempJSONObject = jsonObject.getJSONObject("item");
+				futureRainWeather = new FutureRainWeather(tempJSONObject);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
+			text5.setText("6일동안 오전 강수상태 : " + futureRainWeather.getWf3Am() + ", "
+					 + futureRainWeather.getWf4Am() + ", "
+					 + futureRainWeather.getWf5Am() + ", "
+					 + futureRainWeather.getWf6Am() + ", "
+					 + futureRainWeather.getWf7Am() + ", "
+					 + futureRainWeather.getWf8());
 		}
 		
 		@Override
 		public void onFail() {
-			
+			Toast.makeText(getApplicationContext(), R.string.json_error, Toast.LENGTH_SHORT).show();	
 			
 		}
 	};

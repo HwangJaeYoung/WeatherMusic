@@ -12,6 +12,8 @@ public class DateCalculate {
 	private int afterMonth; // 내일 모레
 	private int afterDay;
 	
+	private int curHour;
+	
 	/* if문에서 저러한 계산을 하는 이유는 
 	 * 28, 30, 31일 이후에 달이 바뀌게 되는데
 	 * 그때 바뀌는 달을 계산 하기 위해서 만들었다. */
@@ -51,6 +53,8 @@ public class DateCalculate {
 			afterMonth = tomMonth + 1;
 		else if (tomDay == 31 && afterDay == 1)
 			afterMonth = tomMonth + 1;
+		
+		curHour = calendar.get(Calendar.HOUR_OF_DAY);
 	}
 	
 	public String getYear( ) {
@@ -67,6 +71,10 @@ public class DateCalculate {
 	
 	public String getDayAfter( ) {
 		return curYear + checkFormat(afterMonth, afterDay);
+	}
+	
+	public String getHour( ) {
+		return String.valueOf(curHour - 1) + "00";
 	}
 	
 	public String checkFormat(int aMonth, int aDay) {

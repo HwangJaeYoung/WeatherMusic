@@ -30,5 +30,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/exam2"
         android:text="@string/hello_world" />
-
+    
+    <TextView
+        android:id="@+id/exam5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/exam3"
+        android:text="@string/hello_world" />
+    
 </RelativeLayout>
