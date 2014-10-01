@@ -4,6 +4,8 @@ import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class JsonResponseHandler extends JsonHttpResponseHandler {
@@ -21,6 +23,7 @@ public class JsonResponseHandler extends JsonHttpResponseHandler {
     // Fired when a request returns successfully
     @Override
     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+    	Log.i("json", response.toString());
         try {
 			this.networkResponseListener.onSuccess(response.getJSONObject(PARM_RESPONSE).getJSONObject(PARM_BODY).getJSONObject(PARM_ITEMS));
 		} catch (JSONException e) {

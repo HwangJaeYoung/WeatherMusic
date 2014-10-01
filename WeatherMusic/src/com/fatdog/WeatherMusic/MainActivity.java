@@ -25,7 +25,7 @@ import android.widget.Toast;
 
 import com.fatdog.WeatherMusic.domain.FutureRainWeather;
 import com.fatdog.WeatherMusic.domain.FutureWeather;
-import com.fatdog.WeatherMusic.reuse.etc.DateCalculate;
+import com.fatdog.WeatherMusic.reuse.etc.DateCalculation;
 import com.fatdog.WeatherMusic.reuse.network.CurrentWeatherRequest;
 import com.fatdog.WeatherMusic.reuse.network.FutureRainWeatherRequest;
 import com.fatdog.WeatherMusic.reuse.network.FutureWeatherRequest;
@@ -183,6 +183,10 @@ public class MainActivity extends Activity {
 		}
 
 		finalLocation = si + " " + gu;
+		
+		DateCalculation date = new DateCalculation();
+		Log.i("json", date.getYesterdayDate());
+		
 		getTodayWeather( );
 		getTomorrowWeather( );
 		getFutureWeather( );
@@ -190,51 +194,48 @@ public class MainActivity extends Activity {
 	}
 	
 	public void getTodayWeather( ) {
-		DateCalculate date = new DateCalculate();
-		date.calculateDate();
+		DateCalculation date = new DateCalculation();
 		
 		CurrentWeatherRequest currentWeatherRequest = new CurrentWeatherRequest(getApplicationContext());
 		try {
-			currentWeatherRequest.getTodayWeather(getCurrentState, date.getTomorrow(), date.getHour(), 62, 126);
+			// 어제의 날짜 사용
+			currentWeatherRequest.getTodayWeather(getCurrentState, date.getYesterdayDate(), date.getHour(), 62, 126);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	
 	public void getTomorrowWeather( ) {
-		DateCalculate date = new DateCalculate();
-		date.calculateDate();
+		DateCalculation date = new DateCalculation();
 		
+		// 어제의 날짜 사용
 		TomorrowWeatherRequest tomorrowWeatherRequest = new TomorrowWeatherRequest(getApplicationContext());
 		try {
-			tomorrowWeatherRequest.getTomorrowWeather(getTomorrowState, date.getToday(), 62, 126);
+			tomorrowWeatherRequest.getTomorrowWeather(getTomorrowState, date.getYesterdayDate(), 62, 126);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public void getFutureWeather( ) {
-		DateCalculate date = new DateCalculate();
-		date.calculateDate();
-		
+		DateCalculation date = new DateCalculation();
+
 		FutureWeatherRequest futureWeatherRequest = new FutureWeatherRequest(getApplicationContext());
-		
+		// 어제의 날짜 사용
 		try {
-			futureWeatherRequest.getFutureWeather(getFutureState, "11B10101", date.getToday() + "0600");
+			futureWeatherRequest.getFutureWeather(getFutureState, "11B10101", date.getYesterdayDate() + "0600");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public void getFutureRainWeather( ) {
-		DateCalculate date = new DateCalculate();
-		date.calculateDate();
+		DateCalculation date = new DateCalculation();
 		
+		// 어제의 날짜 사용
 		FutureRainWeatherRequest futureRainWeatherRequest = new FutureRainWeatherRequest(getApplicationContext()); 
-	
 		try {
-			futureRainWeatherRequest.getFutureRainWeather(getFutureRainState, "11B00000", date.getToday() + "0600");
+			futureRainWeatherRequest.getFutureRainWeather(getFutureRainState, "11B00000", date.getYesterdayDate() + "0600");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -280,8 +281,6 @@ public class MainActivity extends Activity {
 		@Override
 		public void onSuccess(JSONObject jsonObject) {
 			
-			DateCalculate date = new DateCalculate();
-			date.calculateDate();
 			
 			JSONArray jsonArray = new JSONArray( );
 			double fsctValueTMN = 0.0, fsctValueTMX = 0.0;
@@ -296,8 +295,9 @@ public class MainActivity extends Activity {
 				try {
 
 					JSONObject checkObject = jsonArray.getJSONObject(i);
-					
-					if (checkObject.getString("fcstDate").equals(date.getDayAfter())) {
+					// 어제의 내일모레 기준
+					// ex) 09월 30일 이면 10월 2일 껄 가져와야됨
+					if (checkObject.getString("fcstDate").equals("20141002")) {
 						if(checkObject.getString("category").equals("TMN") && checkObject.getString("fcstTime").equals("0600")) {
 							double tempFsctValue = Double.parseDouble(checkObject.getString("fcstValue"));
 						
@@ -312,13 +312,10 @@ public class MainActivity extends Activity {
 						}
 					}	
 				} catch (JSONException e) {
-				
 					e.printStackTrace();
 				}
 			}
-			
 			logoText.setText("내일 최저기온 : " + fsctValueTMN + ", " + "내일 최고기온 : " + fsctValueTMX);
-			
 		}
 		
 		@Override
@@ -390,6 +387,7 @@ public class MainActivity extends Activity {
 			
 		}
 	};
+	
 	// 네트워크 수신상태가 안좋거나 기타의 문제가 발생시에 호출
 	public void noLocationAlert() {
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
