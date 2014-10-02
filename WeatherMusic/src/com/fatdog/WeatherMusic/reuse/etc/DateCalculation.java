@@ -12,7 +12,7 @@ public class DateCalculation {
 		
 		Date today = new Date (); 
 		Date yesterday = new Date ( );
-		yesterday.setTime ( today.getTime ( ) - ( (long) 1000 * 60 * 60 * 24 ) );
+		yesterday.setTime ( today.getTime ( ) - ((long) 1000 * 60 * 60 * 24 ));
 		
 		Calendar calendar = Calendar.getInstance ( );
 		calendar.setTime ( yesterday );
