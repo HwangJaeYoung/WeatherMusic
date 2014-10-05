@@ -11,6 +11,49 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <TextView
+        android:id="@+id/tv_text1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ballard page"
+        android:textSize="20dp" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_text2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="30dp"
+        android:text="ballard page"
+        android:textSize="20dp" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_text3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="60dp"
+        android:text="ballard page"
+        android:textSize="20dp" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_text4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="90dp"
+        android:text="ballard page"
+        android:textSize="20dp" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_text5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="120dp"
+        android:text="ballard page"
+        android:textSize="20dp" >
+    </TextView>
     <!-- 정적인 프래그먼트 생성 -->
 
     <fragment
@@ -23,5 +66,7 @@
     <!--
          <fragment>를 <FrameLayout>과 같다고 봐도 무방하다.
          findFragmentById(R.id.navigation_drawer)도 부모 뷰의 R.id를 이용하여
-         NavigationDrawerFragment를 찾는다고 이해하는 것이 편할 것 같다.  -->
+         NavigationDrawerFragment를 찾는다고 이해하는 것이 편할 것 같다.
+    -->
+
 </android.support.v4.widget.DrawerLayout>

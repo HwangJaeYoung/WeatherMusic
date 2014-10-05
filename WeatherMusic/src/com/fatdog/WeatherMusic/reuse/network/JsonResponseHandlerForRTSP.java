@@ -4,14 +4,15 @@ import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-
 import android.util.Log;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+// 파라미터 등이 다르기 떄문에 새로 정의하였다.
 public class JsonResponseHandlerForRTSP extends JsonHttpResponseHandler {
 	private HttpRequesterForRTSP.NetworkResponseListener networkResponseListener;
 
-	private static final String PARM_RESPONSE = "response";
+	private static final String PARM_ENTRY = "entry";
 
 	public JsonResponseHandlerForRTSP(HttpRequesterForRTSP.NetworkResponseListener aNetworkResponseListener) {
 		this.networkResponseListener = aNetworkResponseListener;
@@ -21,8 +22,9 @@ public class JsonResponseHandlerForRTSP extends JsonHttpResponseHandler {
 	// Fired when a request returns successfully
 	@Override
 	public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+		Log.i("js", response.toString());
 		try {
-			this.networkResponseListener.onSuccess(response.getJSONObject("entry"));
+			this.networkResponseListener.onSuccess(response.getJSONObject(PARM_ENTRY));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

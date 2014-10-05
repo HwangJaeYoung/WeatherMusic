@@ -14,7 +14,6 @@ public class TomorrowWeatherRequest {
     private static final String PARM_NX = "nx";
     private static final String PARM_NY = "ny";
     
-    
 	private static final String URL_BASE = "ForecastSpaceData?ServiceKey=Dt4G7hV1JCZaZ7qgQ2QXdAjRgo/W7N4R1JsEO9Kez7YX/lX0LflHSeeXcJ/Nc1u3B0csKUqDxQjs9qUZN1HJrw==";
 
     public TomorrowWeatherRequest(Context aContext) {
@@ -23,8 +22,8 @@ public class TomorrowWeatherRequest {
 	
 	public void getTomorrowWeather(final HttpRequester.NetworkResponseListener aNetworkListener, String aDate, int aNX, int aNY) throws JSONException {
 		RequestParams requestParams = new RequestParams( );
-		requestParams.put(PARM_BASE_DATE, aDate);
-		requestParams.put(PARM_BASE_TIME, "1700");
+		requestParams.put(PARM_BASE_DATE, aDate); // 오늘 기준의 어제 날짜	
+		requestParams.put(PARM_BASE_TIME, "1700"); // 17시에 모레의 최저, 최고 기온이 모두 다 나타나있다.
 		requestParams.put(PARM_NX, aNX);
 		requestParams.put(PARM_NY, aNY);
 		

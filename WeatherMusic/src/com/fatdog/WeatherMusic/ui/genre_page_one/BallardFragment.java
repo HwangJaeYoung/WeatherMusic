@@ -23,27 +23,38 @@ public class BallardFragment extends Fragment{
 	private ViewForBalladFragment view;
 	private String videoId = "sr3JaQ3h7YA"; // 나중에 서버랑 통신해서 받음
 	
-	MediaPlayer mMediaPlayer = new MediaPlayer();
+	MediaPlayer mMediaPlayer = null;
 	String MUSIC_URL = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mMediaPlayer = new MediaPlayer( );
 	}
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// this는 Controller를 위해서 넣어주는 것이다.
         view = new ViewForBalladFragment(getActivity( ), inflater, container); // 뷰를 생성해 낸다.
-        serchRTSPurlFromYouTubeServer( );
+        serchRTSPurlFromYouTubeServer("sr3JaQ3h7YA");
+        
+		mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+			@Override
+			public void onCompletion(MediaPlayer mp) {
+				mMediaPlayer.stop();
+				mMediaPlayer.reset();
+				serchRTSPurlFromYouTubeServer("_kr3bOs5s8U");					
+			}
+		});
+		
         return view.getRoot();
     }
 	
-	public void serchRTSPurlFromYouTubeServer(  ) {
-		Log.i("net", "in");
+	
+	public void serchRTSPurlFromYouTubeServer(String aVideoId) {
 		RTSPurlRequest RTSPurlRequest = new RTSPurlRequest(getActivity());
 		try {
-			RTSPurlRequest.getRTSTurlAbuoutYouTubeUrl(videoId, getRTSPListener);
+			RTSPurlRequest.getRTSTurlAbuoutYouTubeUrl(aVideoId, getRTSPListener);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -73,8 +84,7 @@ public class BallardFragment extends Fragment{
 				
 				e.printStackTrace();
 			}			
-			
-			mMediaPlayer = new MediaPlayer();
+			Log.i("js", "in");
 			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
 			try {
@@ -97,6 +107,8 @@ public class BallardFragment extends Fragment{
 				Toast.makeText(getActivity(), "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
 			}
 			mMediaPlayer.start();
+			
+
 		}	
 		
 		@Override

@@ -18,18 +18,21 @@ public class FutureRainWeather {
 	
 	private static final String PARM_WF8 = "wf8";
 	
+	// 오전 날씨 예보
 	private String wf3Am;
 	private String wf4Am;
 	private String wf5Am;
 	private String wf6Am;
 	private String wf7Am;
 	
+	// 오후 날씨 예보
 	private String wf3Pm;
 	private String wf4Pm;
 	private String wf5Pm;
 	private String wf6Pm;
 	private String wf7Pm;
 	
+	// 마지막날 날씨 예보 마지막은 하나 밖에 없음
 	private String wf8;
 	
 	public FutureRainWeather(JSONObject aJSONObject) throws JSONException {

@@ -8,6 +8,7 @@ import android.util.Log;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 
+// BASE_URL등 기본적인 것들이 다르기 떄문에 날씨와 다르게 새로 정의하였다.
 public class HttpRequesterForRTSP {
 	private static final String BASE_URL = "http://gdata.youtube.com/feeds/api/videos/";
 	private static AsyncHttpClient client = new AsyncHttpClient();

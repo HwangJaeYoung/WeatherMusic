@@ -58,7 +58,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	private static final long MIN_TIME_BW_UPDATES = 0;
 	private LocationListener networkListener;
 	private LocationListener gpsListener;
-	private TextView logoText;
+	private TextView text1;
 	private TextView text2;
 	private TextView text3;
 	private TextView text4;
@@ -70,9 +70,27 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		backPressCloseHandler = new BackPressCloseHandler(this);
 		setContentView(R.layout.activity_main);
+		
+		text1 = (TextView)findViewById(R.id.tv_text1);
+		text2 = (TextView)findViewById(R.id.tv_text2);
+		text3 = (TextView)findViewById(R.id.tv_text3);
+		text4 = (TextView)findViewById(R.id.tv_text4);
+		text5 = (TextView)findViewById(R.id.tv_text5);
+		
+		
+		
 		// 정적으로 정의된 프래그먼트이므로 여기서는 라이프사이클을 수행한 프래그먼트가 넘어오게 된다.
 		mNavigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager( ).findFragmentById(R.id.navigation_drawer);
 	    mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout)findViewById(R.id.drawer_layout));
+	}
+	
+	@Override
+	protected void onResume( ) {
+		super.onResume();
+		getTodayWeather( );
+		//getTomorrowWeather( );
+		//getFutureWeather( );
+		//getFutureRainWeather( );
 	}
 
 	@Override
@@ -86,7 +104,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             	// add는 기존의 것을 그대로 놔두며 추가하고, replace는 기존의 것을 제거하고 추가한다.
             	// 동적으로 프래그먼트를 정의하며, 레이아웃에 추가 될 때 라이프사이클을 돈다.
                 case 0: 
-                    transaction.replace(R.id.container, new BallardFragment()).commit();
+                    // transaction.replace(R.id.container, new BallardFragment()).commit();
                     break;
                 default: // etc...
                     break;
@@ -218,18 +236,17 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		DateCalculation date = new DateCalculation();
 		Log.i("json", date.getYesterdayDate());
 		
-		//getTodayWeather( );
-		//getTomorrowWeather( );
-		//getFutureWeather( );
-		//getFutureRainWeather( );
+
 	}
 	
 	public void getTodayWeather( ) {
 		DateCalculation date = new DateCalculation();
 		
+		Log.i("weather", date.getHour());
+		Log.i("weather", date.getTodayDate());
 		CurrentWeatherRequest currentWeatherRequest = new CurrentWeatherRequest(getApplicationContext());
 		try {
-			currentWeatherRequest.getTodayWeather(getCurrentState, date.getYesterdayDate(), date.getHour(), 62, 126);
+			currentWeatherRequest.getTodayWeather(getCurrentState, date.getTodayDate(), date.getHour(), 62, 126);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -238,6 +255,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	public void getTomorrowWeather( ) {
 		DateCalculation date = new DateCalculation();
 		
+		// 오늘 기준의 어제의 날짜를 입력한다음 어제 날짜를 기준으로한 내일모레가 결국은 내일의 날씨가 된다.
+		// ex) 10.06이면 10.05를 입력하여 10.07의 상태를 구하고 이것은 10.06의 내일 날씨가 된다.
 		TomorrowWeatherRequest tomorrowWeatherRequest = new TomorrowWeatherRequest(getApplicationContext());
 		try {
 			tomorrowWeatherRequest.getTomorrowWeather(getTomorrowState, date.getYesterdayDate(), 62, 126);
@@ -247,6 +266,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	}
 	
 	public void getFutureWeather( ) {
+		
+		// 11B10101은 서울을 뜻한다. 일 2회 생성되는데 (6시, 18시)
+		// 아침을 기준으로 예보하는 것이 좋을것 같아서 6시를 기준으로 한다.
 		DateCalculation date = new DateCalculation();
 
 		FutureWeatherRequest futureWeatherRequest = new FutureWeatherRequest(getApplicationContext());
@@ -259,6 +281,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	}
 	
 	public void getFutureRainWeather( ) {
+		// 11B00000은 서울, 경기, 인천을 뜻한다. 일 2회 생성되는데 (6시, 18시)
+		// 아침을 기준으로 예보하는 것이 좋을것 같아서 6시를 기준으로 한다.
 		DateCalculation date = new DateCalculation();
 		
 		FutureRainWeatherRequest futureRainWeatherRequest = new FutureRainWeatherRequest(getApplicationContext()); 
@@ -293,7 +317,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 					e.printStackTrace();
 				}
 				
-				text4.setText("?꾩옱湲곗삩 : " + currentTemp);
+				text1.setText("현재 기온 : " + currentTemp);
 			}
 		}
 		
@@ -307,7 +331,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		
 		@Override
 		public void onSuccess(JSONObject jsonObject) {
-			
+			DateCalculation date = new DateCalculation();
 			
 			JSONArray jsonArray = new JSONArray( );
 			double fsctValueTMN = 0.0, fsctValueTMX = 0.0;
@@ -322,9 +346,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 				try {
 
 					JSONObject checkObject = jsonArray.getJSONObject(i);
-					// ?댁젣???댁씪紐⑤젅 湲곗?
-					// ex) 09??30???대㈃ 10??2??猿?媛?몄??쇰맖
-					if (checkObject.getString("fcstDate").equals("20141002")) {
+
+					if (checkObject.getString("fcstDate").equals(date.getTomorrowDayDate())) {
 						if(checkObject.getString("category").equals("TMN") && checkObject.getString("fcstTime").equals("0600")) {
 							double tempFsctValue = Double.parseDouble(checkObject.getString("fcstValue"));
 						
@@ -342,7 +365,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 					e.printStackTrace();
 				}
 			}
-			logoText.setText("?댁씪 理쒖?湲곗삩 : " + fsctValueTMN + ", " + "?댁씪 理쒓퀬湲곗삩 : " + fsctValueTMX);
+			text2.setText("내일 최저온도" + fsctValueTMN + ", " + "내일최고온도 : " + fsctValueTMX);
 		}
 		
 		@Override
@@ -365,14 +388,14 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 				e.printStackTrace();
 			}
 		
-			text2.setText("6?쇰룞??理쒓퀬湲곗삩 : " + futureWeather.getTaMax3() + ", "
+			text3.setText("6일 최고기온 : " + futureWeather.getTaMax3() + ", "
 					 + futureWeather.getTaMax4() + ", "
 					 + futureWeather.getTaMax5() + ", "
 					 + futureWeather.getTaMax6() + ", "
 					 + futureWeather.getTaMax7() + ", "
 					 + futureWeather.getTaMax8());
 			
-			text3.setText("6?쇰룞??理쒖?湲곗삩 : " + futureWeather.getTaMin3() + ", "
+			text4.setText("6일 최저기온 : " + futureWeather.getTaMin3() + ", "
 					 + futureWeather.getTaMin4() + ", "
 					 + futureWeather.getTaMin5() + ", "
 					 + futureWeather.getTaMin6() + ", "
@@ -400,7 +423,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 				e.printStackTrace();
 			}
 			
-			text5.setText("6?쇰룞???ㅼ쟾 媛뺤닔?곹깭 : " + futureRainWeather.getWf3Am() + ", "
+			text5.setText("6아침 날씨상태 : " + futureRainWeather.getWf3Am() + ", "
 					 + futureRainWeather.getWf4Am() + ", "
 					 + futureRainWeather.getWf5Am() + ", "
 					 + futureRainWeather.getWf6Am() + ", "
