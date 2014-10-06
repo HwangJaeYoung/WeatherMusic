@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.fatdog.WeatherMusic.reuse.etc.WeatherMusicApplication;
 import com.fatdog.WeatherMusic.reuse.network.HttpRequesterForRTSP;
 import com.fatdog.WeatherMusic.reuse.network.RTSPurlRequest;
 
@@ -29,7 +30,15 @@ public class BallardFragment extends Fragment{
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mMediaPlayer = new MediaPlayer( );
+		WeatherMusicApplication wma = (WeatherMusicApplication)getActivity( ).getApplicationContext();
+		mMediaPlayer = wma.getMediaPlayer();
+	}
+	
+	@Override
+	public void onDetach( ) {
+		super.onDetach();
+		mMediaPlayer.stop();
+		mMediaPlayer.reset();
 	}
 	
 	@Override

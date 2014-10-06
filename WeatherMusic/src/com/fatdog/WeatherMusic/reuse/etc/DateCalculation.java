@@ -25,7 +25,7 @@ public class DateCalculation {
 		return yesterdayYear + checkFormat(yesterdayMonth, yesterdayDay);
 	}
 	
-	public String getTomorrowDayDate( ) { // 현재 기준의 내일 날짜를 가지고 온다.
+	public String getTomorrowDayDate( ) { // 현재 기준의 내일 날짜를 가지고 온다. 결국은 내일 모레의 날짜가 된다.
 		int tomorrowMonth = 0, tomowworDay = 0, tomorrowYear = 0;
 		
 		Date today = new Date ();		

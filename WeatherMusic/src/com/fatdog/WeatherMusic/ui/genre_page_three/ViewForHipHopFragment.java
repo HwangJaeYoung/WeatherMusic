@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.fatdog.WeatherMusic.R;
 import com.fatdog.WeatherMusic.reuse.mvc.fragement.AbstractViewForFragment;
 
 public class ViewForHipHopFragment extends AbstractViewForFragment{
@@ -17,8 +18,7 @@ public class ViewForHipHopFragment extends AbstractViewForFragment{
 
 	@Override
 	protected View inflate(LayoutInflater inflater, ViewGroup container) {
-	
-		return null;
+		return inflater.inflate(R.layout.fragment_hiphop, container, false);
 	}
 
 	@Override

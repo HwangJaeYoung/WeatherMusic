@@ -12,48 +12,15 @@
         android:layout_height="match_parent" />
 
     <TextView
-        android:id="@+id/tv_text1"
+        android:id="@+id/tv_text7"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ballard page"
-        android:textSize="20dp" >
+        android:layout_height="50dp"
+        android:paddingTop="270dp"
+        android:text="Start / PauseButton"
+        android:textColor="#ff00ff"
+        android:textSize="30dp" >
     </TextView>
 
-    <TextView
-        android:id="@+id/tv_text2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="30dp"
-        android:text="ballard page"
-        android:textSize="20dp" >
-    </TextView>
-
-    <TextView
-        android:id="@+id/tv_text3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="60dp"
-        android:text="ballard page"
-        android:textSize="20dp" >
-    </TextView>
-
-    <TextView
-        android:id="@+id/tv_text4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="90dp"
-        android:text="ballard page"
-        android:textSize="20dp" >
-    </TextView>
-
-    <TextView
-        android:id="@+id/tv_text5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="120dp"
-        android:text="ballard page"
-        android:textSize="20dp" >
-    </TextView>
     <!-- 정적인 프래그먼트 생성 -->
 
     <fragment

@@ -16,6 +16,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +24,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,12 +33,14 @@ import com.fatdog.WeatherMusic.domain.FutureRainWeather;
 import com.fatdog.WeatherMusic.domain.FutureWeather;
 import com.fatdog.WeatherMusic.reuse.etc.BackPressCloseHandler;
 import com.fatdog.WeatherMusic.reuse.etc.DateCalculation;
+import com.fatdog.WeatherMusic.reuse.etc.WeatherMusicApplication;
 import com.fatdog.WeatherMusic.reuse.network.CurrentWeatherRequest;
 import com.fatdog.WeatherMusic.reuse.network.FutureRainWeatherRequest;
 import com.fatdog.WeatherMusic.reuse.network.FutureWeatherRequest;
 import com.fatdog.WeatherMusic.reuse.network.HttpRequester;
 import com.fatdog.WeatherMusic.reuse.network.TomorrowWeatherRequest;
 import com.fatdog.WeatherMusic.ui.genre_page_one.BallardFragment;
+import com.fatdog.WeatherMusic.ui.genre_page_three.HipHopFragment;
 import com.fatdog.WeatherMusic.ui.navigation_drawer_menu.NavigationDrawerFragment;
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -63,6 +67,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	private TextView text3;
 	private TextView text4;
 	private TextView text5;
+	private TextView text6;
+	private TextView text7;
+	
+	private MediaPlayer mp;
+	private int length;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +80,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		backPressCloseHandler = new BackPressCloseHandler(this);
 		setContentView(R.layout.activity_main);
 		
-		text1 = (TextView)findViewById(R.id.tv_text1);
-		text2 = (TextView)findViewById(R.id.tv_text2);
-		text3 = (TextView)findViewById(R.id.tv_text3);
-		text4 = (TextView)findViewById(R.id.tv_text4);
-		text5 = (TextView)findViewById(R.id.tv_text5);
-		
-		
+		mp = ((WeatherMusicApplication)getApplicationContext()).getMediaPlayer();
+		text7 = (TextView)findViewById(R.id.tv_text7);
 		
 		// 정적으로 정의된 프래그먼트이므로 여기서는 라이프사이클을 수행한 프래그먼트가 넘어오게 된다.
 		mNavigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager( ).findFragmentById(R.id.navigation_drawer);
@@ -87,10 +91,33 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	@Override
 	protected void onResume( ) {
 		super.onResume();
-		getTodayWeather( );
+		//getTodayWeather( );
 		//getTomorrowWeather( );
 		//getFutureWeather( );
 		//getFutureRainWeather( );
+		
+		//initLogoSplash( );
+		//defineLocation( );
+		
+		text7.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(mp.isPlaying()) {
+					mp.pause();				
+					length = mp.getCurrentPosition();
+					
+				}
+				else {
+					Toast.makeText(getApplicationContext(),"in", Toast.LENGTH_SHORT).show();
+					mp.seekTo(length);
+					mp.start();
+					
+					
+				}
+			
+			}
+		});
 	}
 
 	@Override
@@ -104,7 +131,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             	// add는 기존의 것을 그대로 놔두며 추가하고, replace는 기존의 것을 제거하고 추가한다.
             	// 동적으로 프래그먼트를 정의하며, 레이아웃에 추가 될 때 라이프사이클을 돈다.
                 case 0: 
-                    // transaction.replace(R.id.container, new BallardFragment()).commit();
+                    transaction.replace(R.id.container, new BallardFragment()).commit();
+                    break;
+                case 1: 
+                    transaction.replace(R.id.container, new HipHopFragment()).commit();
                     break;
                 default: // etc...
                     break;
@@ -232,18 +262,13 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		}
 
 		finalLocation = si + " " + gu;
+		text6.setText(finalLocation);
 		
-		DateCalculation date = new DateCalculation();
-		Log.i("json", date.getYesterdayDate());
-		
-
 	}
 	
 	public void getTodayWeather( ) {
 		DateCalculation date = new DateCalculation();
 		
-		Log.i("weather", date.getHour());
-		Log.i("weather", date.getTodayDate());
 		CurrentWeatherRequest currentWeatherRequest = new CurrentWeatherRequest(getApplicationContext());
 		try {
 			currentWeatherRequest.getTodayWeather(getCurrentState, date.getTodayDate(), date.getHour(), 62, 126);
@@ -266,7 +291,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	}
 	
 	public void getFutureWeather( ) {
-		
 		// 11B10101은 서울을 뜻한다. 일 2회 생성되는데 (6시, 18시)
 		// 아침을 기준으로 예보하는 것이 좋을것 같아서 6시를 기준으로 한다.
 		DateCalculation date = new DateCalculation();
