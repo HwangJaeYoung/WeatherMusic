@@ -104,8 +104,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 			@Override
 			public void onClick(View v) {
 				if(mp.isPlaying()) {
-					mp.pause();				
 					length = mp.getCurrentPosition();
+					mp.pause();				
+					
 					
 				}
 				else {
