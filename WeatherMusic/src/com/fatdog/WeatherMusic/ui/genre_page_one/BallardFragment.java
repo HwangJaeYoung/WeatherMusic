@@ -20,10 +20,10 @@ import com.fatdog.WeatherMusic.reuse.etc.WeatherMusicApplication;
 import com.fatdog.WeatherMusic.reuse.network.HttpRequesterForRTSP;
 import com.fatdog.WeatherMusic.reuse.network.RTSPurlRequest;
 
-public class BallardFragment extends Fragment{
+public class BallardFragment extends Fragment implements ViewForBalladFragment.Controller {
 	private ViewForBalladFragment view;
 	private String videoId = "sr3JaQ3h7YA"; // 나중에 서버랑 통신해서 받음
-	
+	private int length;
 	MediaPlayer mMediaPlayer = null;
 	String MUSIC_URL = null;
 	
@@ -44,7 +44,7 @@ public class BallardFragment extends Fragment{
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// this는 Controller를 위해서 넣어주는 것이다.
-        view = new ViewForBalladFragment(getActivity( ), inflater, container); // 뷰를 생성해 낸다.
+        view = new ViewForBalladFragment(getActivity( ), inflater, container, this); // 뷰를 생성해 낸다.
         serchRTSPurlFromYouTubeServer("sr3JaQ3h7YA");
         
 		mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -123,4 +123,16 @@ public class BallardFragment extends Fragment{
 		@Override
 		public void onFail() { }
 	};
+
+	@Override
+	public void startPauseMusic() {
+		if(mMediaPlayer.isPlaying()) {
+			length = mMediaPlayer.getCurrentPosition();
+			mMediaPlayer.pause();					
+		}
+		else {
+			mMediaPlayer.seekTo(length);
+			mMediaPlayer.start();		
+		}
+	}
 }

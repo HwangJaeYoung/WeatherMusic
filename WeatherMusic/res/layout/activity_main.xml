@@ -5,35 +5,22 @@
     android:layout_height="match_parent" >
 
     <!-- 동적인 프래그먼트 생성 -->
-
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <TextView
-        android:id="@+id/tv_text7"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:paddingTop="270dp"
-        android:text="Start / PauseButton"
-        android:textColor="#ff00ff"
-        android:textSize="30dp" >
-    </TextView>
-
+        android:layout_height="match_parent" >
+    </FrameLayout>
+    
     <!-- 정적인 프래그먼트 생성 -->
-
     <fragment
         android:id="@+id/navigation_drawer"
         android:name="com.fatdog.WeatherMusic.ui.navigation_drawer_menu.NavigationDrawerFragment"
         android:layout_width="297dp"
         android:layout_height="match_parent"
         android:layout_gravity="start" />
-
     <!--
          <fragment>를 <FrameLayout>과 같다고 봐도 무방하다.
          findFragmentById(R.id.navigation_drawer)도 부모 뷰의 R.id를 이용하여
          NavigationDrawerFragment를 찾는다고 이해하는 것이 편할 것 같다.
     -->
-
 </android.support.v4.widget.DrawerLayout>

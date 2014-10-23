@@ -32,5 +32,6 @@ public class LoginActivity extends Activity implements ViewForLoginActivity.Cont
 	public void onLogin() {
 		Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 		startActivity(intent);
+		finish();
 	}
 }
