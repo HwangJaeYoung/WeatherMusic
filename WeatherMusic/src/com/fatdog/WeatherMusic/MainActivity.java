@@ -72,21 +72,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	
 	private MediaPlayer mp;
 	private int length;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		backPressCloseHandler = new BackPressCloseHandler(this);
-		setContentView(R.layout.activity_main);
-		
-		mp = ((WeatherMusicApplication)getApplicationContext()).getMediaPlayer();
-		text7 = (TextView)findViewById(R.id.tv_text7);
-		
-		// 정적으로 정의된 프래그먼트이므로 여기서는 라이프사이클을 수행한 프래그먼트가 넘어오게 된다.
-		mNavigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager( ).findFragmentById(R.id.navigation_drawer);
-	    mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout)findViewById(R.id.drawer_layout));
-	}
+
 	
 	@Override
 	protected void onResume( ) {
@@ -278,46 +264,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		}
 	}
 	
-	public void getTomorrowWeather( ) {
-		DateCalculation date = new DateCalculation();
-		
-		// 오늘 기준의 어제의 날짜를 입력한다음 어제 날짜를 기준으로한 내일모레가 결국은 내일의 날씨가 된다.
-		// ex) 10.06이면 10.05를 입력하여 10.07의 상태를 구하고 이것은 10.06의 내일 날씨가 된다.
-		TomorrowWeatherRequest tomorrowWeatherRequest = new TomorrowWeatherRequest(getApplicationContext());
-		try {
-			tomorrowWeatherRequest.getTomorrowWeather(getTomorrowState, date.getYesterdayDate(), 62, 126);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void getFutureWeather( ) {
-		// 11B10101은 서울을 뜻한다. 일 2회 생성되는데 (6시, 18시)
-		// 아침을 기준으로 예보하는 것이 좋을것 같아서 6시를 기준으로 한다.
-		DateCalculation date = new DateCalculation();
-
-		FutureWeatherRequest futureWeatherRequest = new FutureWeatherRequest(getApplicationContext());
-
-		try {
-			futureWeatherRequest.getFutureWeather(getFutureState, "11B10101", date.getYesterdayDate() + "0600");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void getFutureRainWeather( ) {
-		// 11B00000은 서울, 경기, 인천을 뜻한다. 일 2회 생성되는데 (6시, 18시)
-		// 아침을 기준으로 예보하는 것이 좋을것 같아서 6시를 기준으로 한다.
-		DateCalculation date = new DateCalculation();
-		
-		FutureRainWeatherRequest futureRainWeatherRequest = new FutureRainWeatherRequest(getApplicationContext()); 
-		try {
-			futureRainWeatherRequest.getFutureRainWeather(getFutureRainState, "11B00000", date.getYesterdayDate() + "0600");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	HttpRequester.NetworkResponseListener getCurrentState = new HttpRequester.NetworkResponseListener() {
 		
 		@Override
@@ -350,118 +296,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		public void onFail() {
 			Toast.makeText(getApplicationContext(), R.string.json_error, Toast.LENGTH_SHORT).show();	
 		}
-	};
-	
-	HttpRequester.NetworkResponseListener getTomorrowState = new HttpRequester.NetworkResponseListener() {
-		
-		@Override
-		public void onSuccess(JSONObject jsonObject) {
-			DateCalculation date = new DateCalculation();
-			
-			JSONArray jsonArray = new JSONArray( );
-			double fsctValueTMN = 0.0, fsctValueTMX = 0.0;
-			
-			try {
-				jsonArray = jsonObject.getJSONArray("item");
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			
-			for(int i = 0; i < jsonArray.length(); i++)	{
-				try {
-
-					JSONObject checkObject = jsonArray.getJSONObject(i);
-
-					if (checkObject.getString("fcstDate").equals(date.getTomorrowDayDate())) {
-						if(checkObject.getString("category").equals("TMN") && checkObject.getString("fcstTime").equals("0600")) {
-							double tempFsctValue = Double.parseDouble(checkObject.getString("fcstValue"));
-						
-							if(tempFsctValue > 1)
-								fsctValueTMN = tempFsctValue;
-						}
-						else if(checkObject.getString("category").equals("TMX")) {
-							double tempFsctValue = Double.parseDouble(checkObject.getString("fcstValue"));
-						
-							if(tempFsctValue > 1)
-								fsctValueTMX = tempFsctValue;
-						}
-					}	
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			}
-			text2.setText("내일 최저온도" + fsctValueTMN + ", " + "내일최고온도 : " + fsctValueTMX);
-		}
-		
-		@Override
-		public void onFail( ) {
-			Toast.makeText(getApplicationContext(), R.string.json_error, Toast.LENGTH_SHORT).show();
-		}
-	}; 
-	
-	HttpRequester.NetworkResponseListener getFutureState = new HttpRequester.NetworkResponseListener() {
-		
-		@Override
-		public void onSuccess(JSONObject jsonObject) {
-			JSONObject tempJSONObject = new JSONObject( );
-			FutureWeather futureWeather = null;
-			
-			try {
-				tempJSONObject = jsonObject.getJSONObject("item");
-				futureWeather = new FutureWeather(tempJSONObject);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		
-			text3.setText("6일 최고기온 : " + futureWeather.getTaMax3() + ", "
-					 + futureWeather.getTaMax4() + ", "
-					 + futureWeather.getTaMax5() + ", "
-					 + futureWeather.getTaMax6() + ", "
-					 + futureWeather.getTaMax7() + ", "
-					 + futureWeather.getTaMax8());
-			
-			text4.setText("6일 최저기온 : " + futureWeather.getTaMin3() + ", "
-					 + futureWeather.getTaMin4() + ", "
-					 + futureWeather.getTaMin5() + ", "
-					 + futureWeather.getTaMin6() + ", "
-					 + futureWeather.getTaMin7() + ", "
-					 + futureWeather.getTaMin8());
-		}
-		
-		@Override
-		public void onFail() {
-			Toast.makeText(getApplicationContext(), R.string.json_error, Toast.LENGTH_SHORT).show();	
-		}
-	};
-    
-	HttpRequester.NetworkResponseListener getFutureRainState = new HttpRequester.NetworkResponseListener() {
-		
-		@Override
-		public void onSuccess(JSONObject jsonObject) {
-			JSONObject tempJSONObject = new JSONObject( );
-			FutureRainWeather futureRainWeather = null;
-			
-			try {
-				tempJSONObject = jsonObject.getJSONObject("item");
-				futureRainWeather = new FutureRainWeather(tempJSONObject);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			
-			text5.setText("6아침 날씨상태 : " + futureRainWeather.getWf3Am() + ", "
-					 + futureRainWeather.getWf4Am() + ", "
-					 + futureRainWeather.getWf5Am() + ", "
-					 + futureRainWeather.getWf6Am() + ", "
-					 + futureRainWeather.getWf7Am() + ", "
-					 + futureRainWeather.getWf8());
-		}
-		
-		@Override
-		public void onFail() {
-			Toast.makeText(getApplicationContext(), R.string.json_error, Toast.LENGTH_SHORT).show();	
-			
-		}
-	};
+	};	
 	
 	// 네트워크 수신상태가 안좋거나 기타의 문제가 발생시에 호출
 	public void noLocationAlert() {
