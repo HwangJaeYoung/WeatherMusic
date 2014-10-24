@@ -69,7 +69,7 @@ public class NavigationDrawerFragment extends Fragment {
 
 		arrayAdapter.add(new ViewForNavigationDrawerMenuListViewItem.DrawerMenuItem("Ballad"));
 		arrayAdapter.add(new ViewForNavigationDrawerMenuListViewItem.DrawerMenuItem("HipHop"));
-		arrayAdapter.add(new ViewForNavigationDrawerMenuListViewItem.DrawerMenuItem("R&B"));
+		arrayAdapter.add(new ViewForNavigationDrawerMenuListViewItem.DrawerMenuItem("R&B"));	
 		
 		mDrawerListView.setAdapter(arrayAdapter);
 		return root;

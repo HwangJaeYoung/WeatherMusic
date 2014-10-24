@@ -35,13 +35,6 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 	}
 	
 	@Override
-	public void onDetach( ) {
-		super.onDetach();
-		mMediaPlayer.stop();
-		mMediaPlayer.reset();
-	}
-	
-	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// this는 Controller를 위해서 넣어주는 것이다.
         view = new ViewForBalladFragment(getActivity( ), inflater, container, this); // 뷰를 생성해 낸다.
@@ -59,6 +52,12 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
         return view.getRoot();
     }
 	
+	@Override
+	public void onDetach( ) {
+		super.onDetach();
+		mMediaPlayer.stop();
+		mMediaPlayer.reset();
+	}
 	
 	public void serchRTSPurlFromYouTubeServer(String aVideoId) {
 		RTSPurlRequest RTSPurlRequest = new RTSPurlRequest(getActivity());
@@ -73,7 +72,9 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 		@Override
 		public void onSuccess(JSONObject jsonObject) {
 			JSONArray tempJsonArray = null;
+			JSONObject titleObject = null;
 			String MUSIC_URL = null;
+			String musicTitle = null;
 			
 			try {
 				tempJsonArray = jsonObject.getJSONObject("media$group").getJSONArray("media$content");
@@ -87,13 +88,20 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 					if(resultRTSP.equals("rtsp")) {
 						MUSIC_URL = rtspString;						
 					}
-					
 				}
 			} catch (JSONException e) {
-				
 				e.printStackTrace();
 			}			
-			Log.i("js", "in");
+			
+			try {
+				titleObject = jsonObject.getJSONObject("media$group").getJSONObject("media$title");
+				musicTitle = titleObject.getString("$t");
+				view.setMusicTitle(musicTitle);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
+			
 			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
 			try {
@@ -116,8 +124,6 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 				Toast.makeText(getActivity(), "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
 			}
 			mMediaPlayer.start();
-			
-
 		}	
 		
 		@Override
@@ -128,11 +134,20 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 	public void startPauseMusic() {
 		if(mMediaPlayer.isPlaying()) {
 			length = mMediaPlayer.getCurrentPosition();
-			mMediaPlayer.pause();					
+			mMediaPlayer.pause();
+			view.startButtonClicked();
 		}
 		else {
 			mMediaPlayer.seekTo(length);
 			mMediaPlayer.start();		
+			view.pauseButtonClicked();
 		}
+	}
+
+	@Override
+	public void nextMusicStart() {
+		mMediaPlayer.stop();
+		mMediaPlayer.reset();
+		serchRTSPurlFromYouTubeServer("_kr3bOs5s8U");	
 	}
 }

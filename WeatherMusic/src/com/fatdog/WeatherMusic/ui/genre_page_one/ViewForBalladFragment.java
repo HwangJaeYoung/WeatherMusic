@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.fatdog.WeatherMusic.R;
 import com.fatdog.WeatherMusic.reuse.mvc.fragement.AbstractViewForFragment;
@@ -13,6 +14,7 @@ public class ViewForBalladFragment extends AbstractViewForFragment{
 	
 	private Button btPlayPause;
 	private Button bt_next;
+	private TextView tvTrack;
 	private Controller controller;
 	
 	public ViewForBalladFragment(Context context,LayoutInflater layoutInflater, ViewGroup container, Controller aController) {
@@ -29,6 +31,7 @@ public class ViewForBalladFragment extends AbstractViewForFragment{
 	protected void initViews() {
 		btPlayPause = (Button)findViewById(R.id.bt_play_pause);
 		bt_next = (Button)findViewById(R.id.bt_next);
+		tvTrack = (TextView)findViewById(R.id.tv_track);
 	}
 
 	@Override
@@ -39,9 +42,29 @@ public class ViewForBalladFragment extends AbstractViewForFragment{
 				controller.startPauseMusic();
 			}
 		});
+		
+		bt_next.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				controller.nextMusicStart();
+			}
+		});
+	}
+	
+	public void startButtonClicked( ) {
+		btPlayPause.setBackgroundResource(R.drawable.play_btn);
+	}
+	
+	public void pauseButtonClicked( ) {
+		btPlayPause.setBackgroundResource(R.drawable.pause_btn);
+	}
+	
+	public void setMusicTitle(String aTitle) {
+		tvTrack.setText(aTitle);
 	}
 	
 	public static interface Controller {
-		void startPauseMusic( );
+		public void startPauseMusic( );
+		public void nextMusicStart( );
 	}
 }
