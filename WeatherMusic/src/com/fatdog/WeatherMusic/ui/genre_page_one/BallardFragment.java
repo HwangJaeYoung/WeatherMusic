@@ -27,6 +27,7 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 	MediaPlayer mMediaPlayer = null;
 	String MUSIC_URL = null;
 	
+	// test
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
