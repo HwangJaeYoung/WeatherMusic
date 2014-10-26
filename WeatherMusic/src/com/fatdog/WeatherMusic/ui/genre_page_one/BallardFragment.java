@@ -1,6 +1,7 @@
 package com.fatdog.WeatherMusic.ui.genre_page_one;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,37 +17,41 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.fatdog.WeatherMusic.domain.TrackList;
 import com.fatdog.WeatherMusic.reuse.etc.WeatherMusicApplication;
+import com.fatdog.WeatherMusic.reuse.network.HttpRequesterForLastFm;
 import com.fatdog.WeatherMusic.reuse.network.HttpRequesterForRTSP;
+import com.fatdog.WeatherMusic.reuse.network.LastfmRequest;
 import com.fatdog.WeatherMusic.reuse.network.RTSPurlRequest;
 
 public class BallardFragment extends Fragment implements ViewForBalladFragment.Controller {
 	private ViewForBalladFragment view;
-	private String videoId = "sr3JaQ3h7YA"; // 나중에 서버랑 통신해서 받음
 	private int length;
-	MediaPlayer mMediaPlayer = null;
-	String MUSIC_URL = null;
+	private int musicPlayCount = 0;
+	private boolean firstPlaying = false;
+	private MediaPlayer mMediaPlayer = null;
+	private ArrayList<TrackList> trackInfo;
 	
-	// test
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		WeatherMusicApplication wma = (WeatherMusicApplication)getActivity( ).getApplicationContext();
 		mMediaPlayer = wma.getMediaPlayer();
+		trackInfo = new ArrayList<TrackList>( );
+		searchLastFmVidieKey("alternative_folk_rock");
 	}
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// this는 Controller를 위해서 넣어주는 것이다.
         view = new ViewForBalladFragment(getActivity( ), inflater, container, this); // 뷰를 생성해 낸다.
-        serchRTSPurlFromYouTubeServer("sr3JaQ3h7YA");
-        
+
 		mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 			@Override
 			public void onCompletion(MediaPlayer mp) {
 				mMediaPlayer.stop();
 				mMediaPlayer.reset();
-				serchRTSPurlFromYouTubeServer("_kr3bOs5s8U");					
+				serchRTSPurlFromYouTubeServer( );					
 			}
 		});
 		
@@ -60,22 +65,63 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 		mMediaPlayer.reset();
 	}
 	
-	public void serchRTSPurlFromYouTubeServer(String aVideoId) {
+	public void serchRTSPurlFromYouTubeServer( ) {
+		TrackList tr = trackInfo.get(musicPlayCount);
+		musicPlayCount++;
+		
+		view.setMusicTitle(tr.getTitle());
+		view.setMusicArtist(tr.getArtist());
+		
 		RTSPurlRequest RTSPurlRequest = new RTSPurlRequest(getActivity());
+		Log.i("lastfm", tr.getVideoKey());
 		try {
-			RTSPurlRequest.getRTSTurlAbuoutYouTubeUrl(aVideoId, getRTSPListener);
+			RTSPurlRequest.getRTSTurlAbuoutYouTubeUrl(tr.getVideoKey(), getRTSPListener);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
 	
+	public void searchLastFmVidieKey(String aTag) {
+		LastfmRequest lfr = new LastfmRequest(getActivity());
+		try {
+			lfr.getLastFmUrl(aTag, getLastFmListener);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	HttpRequesterForLastFm.NetworkResponseListener getLastFmListener = new HttpRequesterForLastFm.NetworkResponseListener( )  {
+		@Override
+		public void onSuccess(JSONObject jsonObject) {
+			JSONArray tempJSONArray = new JSONArray( );
+			try {
+				tempJSONArray = jsonObject.getJSONArray("track_list");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
+			for(int i = 0; i < 5; i++) {
+				try {
+					TrackList tr = new TrackList(tempJSONArray.getJSONObject(i));
+					trackInfo.add(tr);	
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			Log.i("lastfm", ""+trackInfo.size());
+		}
+
+		@Override
+		public void onFail() { }
+	};
+	
 	HttpRequesterForRTSP.NetworkResponseListener getRTSPListener = new HttpRequesterForRTSP.NetworkResponseListener() {
 		@Override
 		public void onSuccess(JSONObject jsonObject) {
 			JSONArray tempJsonArray = null;
-			JSONObject titleObject = null;
 			String MUSIC_URL = null;
-			String musicTitle = null;
 			
 			try {
 				tempJsonArray = jsonObject.getJSONObject("media$group").getJSONArray("media$content");
@@ -92,16 +138,7 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
-			}			
-			
-			try {
-				titleObject = jsonObject.getJSONObject("media$group").getJSONObject("media$title");
-				musicTitle = titleObject.getString("$t");
-				view.setMusicTitle(musicTitle);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			
+			}						
 			
 			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
@@ -133,15 +170,20 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 
 	@Override
 	public void startPauseMusic() {
-		if(mMediaPlayer.isPlaying()) {
-			length = mMediaPlayer.getCurrentPosition();
-			mMediaPlayer.pause();
-			view.startButtonClicked();
-		}
-		else {
-			mMediaPlayer.seekTo(length);
-			mMediaPlayer.start();		
-			view.pauseButtonClicked();
+		if (firstPlaying == false) {
+			serchRTSPurlFromYouTubeServer();
+			firstPlaying = true;
+		} else {
+			if (mMediaPlayer.isPlaying()) {
+				length = mMediaPlayer.getCurrentPosition();
+				mMediaPlayer.pause();
+				view.startButtonClicked();
+			} else {
+
+				mMediaPlayer.seekTo(length);
+				mMediaPlayer.start();
+				view.pauseButtonClicked();
+			}
 		}
 	}
 
@@ -149,6 +191,6 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 	public void nextMusicStart() {
 		mMediaPlayer.stop();
 		mMediaPlayer.reset();
-		serchRTSPurlFromYouTubeServer("_kr3bOs5s8U");	
+		serchRTSPurlFromYouTubeServer( );	
 	}
 }

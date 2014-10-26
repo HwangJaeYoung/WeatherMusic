@@ -15,6 +15,7 @@ public class ViewForBalladFragment extends AbstractViewForFragment{
 	private Button btPlayPause;
 	private Button bt_next;
 	private TextView tvTrack;
+	private TextView tvArtist;
 	private Controller controller;
 	
 	public ViewForBalladFragment(Context context,LayoutInflater layoutInflater, ViewGroup container, Controller aController) {
@@ -32,6 +33,7 @@ public class ViewForBalladFragment extends AbstractViewForFragment{
 		btPlayPause = (Button)findViewById(R.id.bt_play_pause);
 		bt_next = (Button)findViewById(R.id.bt_next);
 		tvTrack = (TextView)findViewById(R.id.tv_track);
+		tvArtist = (TextView)findViewById(R.id.tv_artist);
 	}
 
 	@Override
@@ -61,6 +63,10 @@ public class ViewForBalladFragment extends AbstractViewForFragment{
 	
 	public void setMusicTitle(String aTitle) {
 		tvTrack.setText(aTitle);
+	}
+	
+	public void setMusicArtist(String anArtist) {
+		tvArtist.setText(anArtist);
 	}
 	
 	public static interface Controller {
