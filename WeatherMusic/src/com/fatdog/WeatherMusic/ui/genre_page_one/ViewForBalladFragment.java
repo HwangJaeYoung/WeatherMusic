@@ -69,6 +69,10 @@ public class ViewForBalladFragment extends AbstractViewForFragment{
 		tvArtist.setText(anArtist);
 	}
 	
+	public void setAlbumCover(String anAlbumURL) {
+		
+	}
+	
 	public static interface Controller {
 		public void startPauseMusic( );
 		public void nextMusicStart( );

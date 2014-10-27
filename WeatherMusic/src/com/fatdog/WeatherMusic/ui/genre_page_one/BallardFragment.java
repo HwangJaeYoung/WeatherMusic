@@ -20,7 +20,9 @@ import android.widget.Toast;
 import com.fatdog.WeatherMusic.domain.TrackList;
 import com.fatdog.WeatherMusic.reuse.etc.WeatherMusicApplication;
 import com.fatdog.WeatherMusic.reuse.network.HttpRequesterForLastFm;
+import com.fatdog.WeatherMusic.reuse.network.HttpRequesterForLastFmCover;
 import com.fatdog.WeatherMusic.reuse.network.HttpRequesterForRTSP;
+import com.fatdog.WeatherMusic.reuse.network.LastfmCoverRequest;
 import com.fatdog.WeatherMusic.reuse.network.LastfmRequest;
 import com.fatdog.WeatherMusic.reuse.network.RTSPurlRequest;
 
@@ -79,6 +81,8 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		
+		searchLastFmCover(tr.getArtist(), tr.getTitle());
 	}
 	
 	public void searchLastFmVidieKey(String aTag) {
@@ -88,8 +92,30 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
 	}
+	
+	public void searchLastFmCover(String anArtist, String aTitle) { 
+		LastfmCoverRequest lfcr = new LastfmCoverRequest(getActivity());
+		try {
+			lfcr.getLastFmCoverUrl(anArtist, aTitle, getLastfmCoverListener);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	HttpRequesterForLastFmCover.NetworkResponseListener getLastfmCoverListener = new HttpRequesterForLastFmCover.NetworkResponseListener() {	
+		@Override
+		public void onSuccess(JSONObject jsonObject) {
+
+			
+		}
+		
+		@Override
+		public void onFail() {
+
+			
+		}
+	};
 	
 	HttpRequesterForLastFm.NetworkResponseListener getLastFmListener = new HttpRequesterForLastFm.NetworkResponseListener( )  {
 		@Override
@@ -101,7 +127,7 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 				e.printStackTrace();
 			}
 			
-			for(int i = 0; i < 5; i++) {
+			for(int i = 0; i < 10; i++) {
 				try {
 					TrackList tr = new TrackList(tempJSONArray.getJSONObject(i));
 					trackInfo.add(tr);	
@@ -140,6 +166,7 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 				e.printStackTrace();
 			}						
 			
+			if(MUSIC_URL != null) {
 			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
 			try {
@@ -162,6 +189,10 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 				Toast.makeText(getActivity(), "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
 			}
 			mMediaPlayer.start();
+			}
+			
+			else
+				serchRTSPurlFromYouTubeServer( );
 		}	
 		
 		@Override
