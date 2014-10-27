@@ -2,20 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/splash_bg"
+    android:gravity="center"
     android:orientation="vertical" >
     
-    <ImageView 
-        android:layout_width="236dp"
-        android:layout_height="236dp"
-        android:src="@drawable/icon_ic"
-        android:layout_marginTop="138.5dp"
-        android:layout_gravity="center"
-        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
-    <ImageView 
-        android:layout_width="181.5dp"
-        android:layout_height="75dp"
-        android:src="@drawable/splash_text"
-        android:layout_gravity="center"/>
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="200dp"
+            android:src="@drawable/icon" />
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="350dp"
+            android:src="@drawable/weather_music" />
+
+       
+    </RelativeLayout>
+
+   
 </LinearLayout>

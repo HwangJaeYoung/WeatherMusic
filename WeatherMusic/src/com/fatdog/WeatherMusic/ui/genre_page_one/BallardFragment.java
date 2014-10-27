@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.fatdog.WeatherMusic.domain.CoverImage;
 import com.fatdog.WeatherMusic.domain.TrackList;
 import com.fatdog.WeatherMusic.reuse.etc.WeatherMusicApplication;
 import com.fatdog.WeatherMusic.reuse.network.HttpRequesterForLastFm;
@@ -106,8 +107,25 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 	HttpRequesterForLastFmCover.NetworkResponseListener getLastfmCoverListener = new HttpRequesterForLastFmCover.NetworkResponseListener() {	
 		@Override
 		public void onSuccess(JSONObject jsonObject) {
-
+			JSONArray tempJSONArray = new JSONArray( );
+			try {
+				tempJSONArray = jsonObject.getJSONArray("image");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 			
+			CoverImage image = null;
+			
+			for(int i = 0; i < tempJSONArray.length() ; i++) {
+				try {
+					image = new CoverImage(tempJSONArray.getJSONObject(i));
+
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			view.setAlbumCover(image);
 		}
 		
 		@Override

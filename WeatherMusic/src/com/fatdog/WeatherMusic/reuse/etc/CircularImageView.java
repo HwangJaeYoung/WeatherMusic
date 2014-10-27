@@ -11,11 +11,12 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.widget.ImageView;
+import android.view.View.MeasureSpec;
 
 import com.fatdog.WeatherMusic.R;
+import com.loopj.android.image.SmartImageView;
 
-public class CircularImageView extends ImageView {
+public class CircularImageView extends SmartImageView {
 	private int borderWidth;
 	private int canvasSize;
 	private Bitmap image;

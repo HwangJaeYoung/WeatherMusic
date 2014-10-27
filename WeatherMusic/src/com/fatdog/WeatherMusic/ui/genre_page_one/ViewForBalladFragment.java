@@ -1,6 +1,8 @@
 package com.fatdog.WeatherMusic.ui.genre_page_one;
 
 import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.fatdog.WeatherMusic.R;
+import com.fatdog.WeatherMusic.domain.CoverImage;
+import com.fatdog.WeatherMusic.reuse.etc.CircularImageView;
 import com.fatdog.WeatherMusic.reuse.mvc.fragement.AbstractViewForFragment;
 
 public class ViewForBalladFragment extends AbstractViewForFragment{
@@ -17,6 +21,7 @@ public class ViewForBalladFragment extends AbstractViewForFragment{
 	private TextView tvTrack;
 	private TextView tvArtist;
 	private Controller controller;
+	private CircularImageView ivAlbumCover;
 	
 	public ViewForBalladFragment(Context context,LayoutInflater layoutInflater, ViewGroup container, Controller aController) {
 		super(context, layoutInflater, container);
@@ -34,6 +39,7 @@ public class ViewForBalladFragment extends AbstractViewForFragment{
 		bt_next = (Button)findViewById(R.id.bt_next);
 		tvTrack = (TextView)findViewById(R.id.tv_track);
 		tvArtist = (TextView)findViewById(R.id.tv_artist);
+		ivAlbumCover = (CircularImageView)findViewById(R.id.iv_album_cover);
 	}
 
 	@Override
@@ -69,8 +75,8 @@ public class ViewForBalladFragment extends AbstractViewForFragment{
 		tvArtist.setText(anArtist);
 	}
 	
-	public void setAlbumCover(String anAlbumURL) {
-		
+	public void setAlbumCover(CoverImage anImage) {
+		ivAlbumCover.setImageUrl(anImage.getCoverURL());
 	}
 	
 	public static interface Controller {

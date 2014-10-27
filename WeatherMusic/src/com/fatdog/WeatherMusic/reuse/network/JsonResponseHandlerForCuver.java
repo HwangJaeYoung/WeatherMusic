@@ -10,12 +10,9 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class JsonResponseHandlerForCuver extends JsonHttpResponseHandler{
 	private HttpRequesterForLastFmCover.NetworkResponseListener networkResponseListener;
-
-	private static final String PARM_RESPONSE = "response";
-	private static final String PARM_BODY = "body";
-	private static final String PARM_ITEMS = "items";
-
-	// &artist=cher&track=believe&format=json
+	private static final String PARM_TRACK = "track";
+	private static final String PARM_ALBUM = "album";
+	
 	public JsonResponseHandlerForCuver(HttpRequesterForLastFmCover.NetworkResponseListener aNetworkResponseListener) {
 		this.networkResponseListener = aNetworkResponseListener;
 	}
@@ -24,8 +21,11 @@ public class JsonResponseHandlerForCuver extends JsonHttpResponseHandler{
 	// Fired when a request returns successfully
 	@Override
 	public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-		Log.i("json", response.toString());
-		
+		try {
+			this.networkResponseListener.onSuccess(response.getJSONObject(PARM_TRACK).getJSONObject(PARM_ALBUM));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// Returns when request failed
