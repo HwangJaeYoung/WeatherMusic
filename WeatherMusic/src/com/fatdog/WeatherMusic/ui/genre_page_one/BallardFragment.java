@@ -2,6 +2,7 @@ package com.fatdog.WeatherMusic.ui.genre_page_one;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,6 +11,7 @@ import org.json.JSONObject;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,6 +36,17 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 	private boolean firstPlaying = false;
 	private MediaPlayer mMediaPlayer = null;
 	private ArrayList<TrackList> trackInfo;
+	private double startTime = 0;
+	
+	private Handler mHandler = new Handler();
+	private Runnable UpdateSongTime = new Runnable() {
+	      public void run() {
+	         startTime = mMediaPlayer.getCurrentPosition();
+	         view.setSeekBarPlayTime(startTime);
+	         view.setPregressAboutSeekBar((int)startTime);
+	         mHandler.postDelayed(this, 1000);
+	      }
+	   };
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,8 +65,10 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 		mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 			@Override
 			public void onCompletion(MediaPlayer mp) {
+				Log.i("lastfm", "compelte");
 				mMediaPlayer.stop();
-				mMediaPlayer.reset();
+				view.setSeekBarMax(0);
+				view.setSeekBarPlayTime(0);
 				serchRTSPurlFromYouTubeServer( );					
 			}
 		});
@@ -64,8 +79,8 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 	@Override
 	public void onDetach( ) {
 		super.onDetach();
+		Log.i("lastfm", "in ondetach");
 		mMediaPlayer.stop();
-		mMediaPlayer.reset();
 	}
 	
 	public void serchRTSPurlFromYouTubeServer( ) {
@@ -104,6 +119,11 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 		}
 	}
 	
+	@Override
+	public void seekFromUser(int aProgress) {
+		  mMediaPlayer.seekTo(aProgress);
+	}
+	
 	HttpRequesterForLastFmCover.NetworkResponseListener getLastfmCoverListener = new HttpRequesterForLastFmCover.NetworkResponseListener() {	
 		@Override
 		public void onSuccess(JSONObject jsonObject) {
@@ -129,10 +149,7 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 		}
 		
 		@Override
-		public void onFail() {
-
-			
-		}
+		public void onFail() { }
 	};
 	
 	HttpRequesterForLastFm.NetworkResponseListener getLastFmListener = new HttpRequesterForLastFm.NetworkResponseListener( )  {
@@ -186,15 +203,16 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 			
 			if(MUSIC_URL != null) {
 			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
+			mMediaPlayer.reset();
+			
 			try {
 				mMediaPlayer.setDataSource(MUSIC_URL);
 			} catch (IllegalArgumentException e) {
-				Toast.makeText(getActivity(), "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "1", Toast.LENGTH_LONG).show();
 			} catch (SecurityException e) {
-				Toast.makeText(getActivity(), "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "2", Toast.LENGTH_LONG).show();
 			} catch (IllegalStateException e) {
-				Toast.makeText(getActivity(), "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "3", Toast.LENGTH_LONG).show();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -202,11 +220,15 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 			try {
 				mMediaPlayer.prepare();
 			} catch (IllegalStateException e) {
-				Toast.makeText(getActivity(), "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "4", Toast.LENGTH_LONG).show();
 			} catch (IOException e) {
-				Toast.makeText(getActivity(), "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "5", Toast.LENGTH_LONG).show();
 			}
+			
+			view.setSeekBarMax(mMediaPlayer.getDuration());
 			mMediaPlayer.start();
+			view.setSeekBarPlayTime(startTime);
+			mHandler.postDelayed(UpdateSongTime, 1000);
 			}
 			
 			else
@@ -242,4 +264,5 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 		mMediaPlayer.reset();
 		serchRTSPurlFromYouTubeServer( );	
 	}
+
 }

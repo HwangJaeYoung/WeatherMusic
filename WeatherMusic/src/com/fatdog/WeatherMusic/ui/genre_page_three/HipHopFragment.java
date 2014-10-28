@@ -39,7 +39,6 @@ public class HipHopFragment extends Fragment{
 	public void onDetach( ) {
 		super.onDetach();
 		mMediaPlayer.stop();
-		mMediaPlayer.reset();
 	}
 	
 	@Override
@@ -52,7 +51,6 @@ public class HipHopFragment extends Fragment{
 			@Override
 			public void onCompletion(MediaPlayer mp) {
 				mMediaPlayer.stop();
-				mMediaPlayer.reset();
 				serchRTSPurlFromYouTubeServer("_kr3bOs5s8U");					
 			}
 		});
@@ -95,15 +93,16 @@ public class HipHopFragment extends Fragment{
 			}			
 			Log.i("js", "in");
 			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
+			mMediaPlayer.reset();
+			
 			try {
 				mMediaPlayer.setDataSource(MUSIC_URL);
 			} catch (IllegalArgumentException e) {
-				Toast.makeText(getActivity(), "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "Illegal", Toast.LENGTH_LONG).show();
 			} catch (SecurityException e) {
-				Toast.makeText(getActivity(), "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "Security", Toast.LENGTH_LONG).show();
 			} catch (IllegalStateException e) {
-				Toast.makeText(getActivity(), "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "IllegalState", Toast.LENGTH_LONG).show();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -111,9 +110,9 @@ public class HipHopFragment extends Fragment{
 			try {
 				mMediaPlayer.prepare();
 			} catch (IllegalStateException e) {
-				Toast.makeText(getActivity(), "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "prepare IllegalState", Toast.LENGTH_LONG).show();
 			} catch (IOException e) {
-				Toast.makeText(getActivity(), "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "prepare IOException", Toast.LENGTH_LONG).show();
 			}
 			mMediaPlayer.start();
 			
