@@ -54,7 +54,7 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 		WeatherMusicApplication wma = (WeatherMusicApplication)getActivity( ).getApplicationContext();
 		mMediaPlayer = wma.getMediaPlayer();
 		trackInfo = new ArrayList<TrackList>( );
-		searchLastFmVidieKey("alternative_folk_rock");
+		searchLastFmVidieKey("hip-hop_sad");
 	}
 	
 	@Override
@@ -208,11 +208,11 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 			try {
 				mMediaPlayer.setDataSource(MUSIC_URL);
 			} catch (IllegalArgumentException e) {
-				Toast.makeText(getActivity(), "1", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "Illegal", Toast.LENGTH_LONG).show();
 			} catch (SecurityException e) {
-				Toast.makeText(getActivity(), "2", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "Security", Toast.LENGTH_LONG).show();
 			} catch (IllegalStateException e) {
-				Toast.makeText(getActivity(), "3", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "IllegalState", Toast.LENGTH_LONG).show();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -220,9 +220,9 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 			try {
 				mMediaPlayer.prepare();
 			} catch (IllegalStateException e) {
-				Toast.makeText(getActivity(), "4", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "prepare IllegalState", Toast.LENGTH_LONG).show();
 			} catch (IOException e) {
-				Toast.makeText(getActivity(), "5", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "prepare IOException", Toast.LENGTH_LONG).show();
 			}
 			
 			view.setSeekBarMax(mMediaPlayer.getDuration());

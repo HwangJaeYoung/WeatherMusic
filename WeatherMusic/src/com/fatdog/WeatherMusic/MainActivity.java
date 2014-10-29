@@ -7,13 +7,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -26,14 +26,16 @@ import android.widget.Toast;
 import com.fatdog.WeatherMusic.reuse.etc.BackPressCloseHandler;
 import com.fatdog.WeatherMusic.reuse.etc.DateCalculation;
 import com.fatdog.WeatherMusic.reuse.etc.LocationPosition;
-import com.fatdog.WeatherMusic.reuse.etc.WeatherMusicApplication;
 import com.fatdog.WeatherMusic.reuse.network.CurrentWeatherRequest;
 import com.fatdog.WeatherMusic.reuse.network.HttpRequester;
 import com.fatdog.WeatherMusic.ui.genre_page_one.BallardFragment;
 import com.fatdog.WeatherMusic.ui.genre_page_three.HipHopFragment;
 import com.fatdog.WeatherMusic.ui.navigation_drawer_menu.NavigationDrawerFragment;
+import com.naver.wcs.WCSLogEventAPI;
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+	public Context wcsContext = null;
+	
 	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0;
 	private static final long MIN_TIME_BW_UPDATES = 0;
 	
@@ -54,9 +56,14 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		wcsContext = this;
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		backPressCloseHandler = new BackPressCloseHandler(this);
 		setContentView(R.layout.activity_main);
+		
+		WCSLogEventAPI wcslog = WCSLogEventAPI.getInstance(wcsContext); 
+		wcslog.onTrackSite((Activity)wcsContext, "MainActivity");
+
 		mNavigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager( ).findFragmentById(R.id.navigation_drawer);
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout)findViewById(R.id.drawer_layout));
 	}
