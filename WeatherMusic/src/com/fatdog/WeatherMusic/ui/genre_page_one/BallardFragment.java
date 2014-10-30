@@ -181,6 +181,12 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 				}
 			}
 			
+			mHandler.post(new Runnable() {
+				public void run() {
+					view.musicLoadingEnd();
+				}
+			});	
+			
 			Log.i("lastfm", "" + trackInfo.size());
 		}
 

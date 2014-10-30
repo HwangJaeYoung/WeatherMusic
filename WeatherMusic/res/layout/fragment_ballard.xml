@@ -21,7 +21,13 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:background="@drawable/play_btn"
-        android:visibility="visible" />
+        android:visibility="invisible" />
+    
+    <ProgressBar android:id="@+id/pb_music_loading"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
 
     <Button
         android:id="@+id/bt_next"

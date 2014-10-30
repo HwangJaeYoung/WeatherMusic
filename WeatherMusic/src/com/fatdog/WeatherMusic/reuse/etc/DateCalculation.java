@@ -3,9 +3,12 @@ package com.fatdog.WeatherMusic.reuse.etc;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.util.Log;
+
 public class DateCalculation {
 	
 	private int curHour;
+	private boolean dateCheck = false;
 	
 	public String getYesterdayDate( ) { // 현재날짜기준의 전날자를 가지고 온다.
 		int yesterdayMonth = 0, yesterdayDay = 0, yesterdayYear = 0;
@@ -52,6 +55,13 @@ public class DateCalculation {
 		
 		// 오늘 날짜 구하기
 		todayDay = calendar.get(Calendar.DATE); // 오늘 일
+		
+		if(dateCheck == true)
+			todayDay -= 1;
+		
+		if(todayDay == 0)
+			todayDay = 1;
+		
 		todayMonth = calendar.get(Calendar.MONTH) + 1; // 오늘 월
 		
 		todayYear = calendar.get(Calendar.YEAR);
@@ -69,23 +79,16 @@ public class DateCalculation {
 		// 정확하게 가져오기 위해 한 시간을 뺀 전시간을 가지고 온다.
 		curHour = calendar.get(Calendar.HOUR_OF_DAY);
 		
-		if(curHour == 2 | curHour == 3 | curHour == 4)
-			curHour = 2;
-		if(curHour == 5 | curHour == 6 | curHour == 7)
-			curHour = 5;
-		if(curHour == 8 | curHour == 9 | curHour == 10)
-			curHour = 8;
-		if(curHour == 11 | curHour == 12 | curHour == 13)
-			curHour = 11;
-		if(curHour == 14 | curHour == 15 | curHour == 16)
-			curHour = 14;
-		if(curHour == 17 | curHour == 18 | curHour == 19)
-			curHour = 17;
-		if(curHour == 20 | curHour == 21 | curHour == 22)
-			curHour = 20;
-		if(curHour == 23 | curHour == 0 | curHour == 1)
+		int curMunute = calendar.get(Calendar.MINUTE);
+		
+		if(curMunute < 35)
+			curHour -= 1;
+		
+		if(curHour == -1) {
 			curHour = 23;
-			
+			dateCheck = true;
+		}
+		
 		if(curHour < 10)
 			time = "0" + String.valueOf(curHour);
 		else

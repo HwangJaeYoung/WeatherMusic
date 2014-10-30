@@ -173,7 +173,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		
 		CurrentWeatherRequest currentWeatherRequest = new CurrentWeatherRequest(getApplicationContext());
 		try {
-			currentWeatherRequest.getTodayWeather(getCurrentState, date.getTodayDate(), date.getHour(), aNX, aNY);
+			currentWeatherRequest.getTodayWeather(getCurrentState, date.getHour(), date.getTodayDate(), aNX, aNY);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

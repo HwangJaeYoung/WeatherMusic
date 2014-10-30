@@ -20,7 +20,7 @@ public class CurrentWeatherRequest {
 		this.context = aContext;
 	}
 	
-	public void getTodayWeather(final HttpRequester.NetworkResponseListener aNetworkListener, String aDate, String aTime, int aNX, int aNY) throws JSONException {
+	public void getTodayWeather(final HttpRequester.NetworkResponseListener aNetworkListener, String aTime, String aDate, int aNX, int aNY) throws JSONException {
 		RequestParams requestParams = new RequestParams( );
 		requestParams.put(PARM_BASE_DATE, aDate);
 		requestParams.put(PARM_BASE_TIME, aTime);

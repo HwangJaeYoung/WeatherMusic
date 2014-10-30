@@ -3,11 +3,11 @@ package com.fatdog.WeatherMusic.ui.genre_page_one;
 import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -28,6 +28,7 @@ public class ViewForBalladFragment extends AbstractViewForFragment{
 	private SeekBar sbMusicSeekbar;
 	private Controller controller;
 	private CircularImageView ivAlbumCover;
+	private ProgressBar pbMusicLoading;
 	
 	public ViewForBalladFragment(Context context,LayoutInflater layoutInflater, ViewGroup container, Controller aController) {
 		super(context, layoutInflater, container);
@@ -49,6 +50,7 @@ public class ViewForBalladFragment extends AbstractViewForFragment{
 		ivAlbumCover = (CircularImageView)findViewById(R.id.iv_album_cover);
 		tvPlayingTime = (TextView)findViewById(R.id.tv_playing_time);
 		tvMusicTime = (TextView)findViewById(R.id.tv_music_time);
+		pbMusicLoading = (ProgressBar)findViewById(R.id.pb_music_loading);
 	}
 
 	@Override
@@ -81,6 +83,11 @@ public class ViewForBalladFragment extends AbstractViewForFragment{
 				}
 			}
 		});
+	}
+	
+	public void musicLoadingEnd( ) {
+		pbMusicLoading.setVisibility(View.INVISIBLE);
+		btPlayPause.setVisibility(View.VISIBLE);
 	}
 	
 	public void startButtonClicked( ) {
