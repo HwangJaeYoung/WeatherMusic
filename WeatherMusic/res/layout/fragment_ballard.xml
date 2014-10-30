@@ -38,7 +38,9 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="35dp"
-        android:text="MAPS"
+        android:text=""
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textColor="#999999"
         android:textSize="40sp" />
 
@@ -49,7 +51,9 @@
         android:layout_below="@id/tv_track"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="Maroon 5"
+        android:text="밖이 어두워요"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textColor="#999999"
         android:textSize="22sp" />
 
@@ -60,33 +64,15 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp" >
-
-        <ImageView
-            android:id="@+id/iv_climate"
-            android:layout_width="20dp"
-            android:layout_height="21dp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/snow_icon" />
-
-        <TextView
-            android:id="@+id/tv_climate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/iv_climate"
-            android:text="Snow"
-            android:textColor="#999"
-            android:textSize="18sp" />
+        
     </RelativeLayout>
 
       <SeekBar
           android:id="@+id/sb_music_seekbar"
-          android:layout_width="match_parent"
+          android:layout_width="300dp"
           android:layout_height="wrap_content"
           android:layout_alignParentBottom="true"
-          android:layout_alignParentLeft="true"
+          android:layout_centerHorizontal="true"
           android:layout_marginBottom="29dp" />
 
       <LinearLayout
@@ -101,8 +87,8 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_centerVertical="true"
-              android:layout_marginLeft="5dp"
-              android:text="Snow"
+              android:layout_marginLeft="35dp"
+              android:text="0:00"
               android:textColor="#999"
               android:textSize="18sp" />
 
@@ -110,8 +96,8 @@
               android:id="@+id/tv_music_time"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_marginLeft="200dp"
-              android:text="Snow"
+			  android:layout_marginLeft="210dp"
+              android:text="0:00"
               android:textColor="#999"
               android:textSize="18sp" />
 

@@ -103,21 +103,33 @@ public class ViewForBalladFragment extends AbstractViewForFragment{
 		ivAlbumCover.setImageUrl(anImage.getCoverURL());
 	}
 	
+	public void setFirstAlbumCover( ) {
+		ivAlbumCover.setImageResource(R.drawable.rain);
+	}
+	
 	public void setSeekBarMax(int aMaxPlayTime) {
 		sbMusicSeekbar.setMax(aMaxPlayTime);
-		tvMusicTime.setText(String.format("%d:%d", 
-	            TimeUnit.MILLISECONDS.toMinutes((long) aMaxPlayTime),
-	            TimeUnit.MILLISECONDS.toSeconds((long) aMaxPlayTime) - 
+		
+		int check = (int) (TimeUnit.MILLISECONDS.toSeconds((long) aMaxPlayTime) - 
 	            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
-	            toMinutes((long) aMaxPlayTime))));
+	            toMinutes((long) aMaxPlayTime)));
+		
+		if(check < 10)
+			tvMusicTime.setText(String.format("%d:0%d", TimeUnit.MILLISECONDS.toMinutes((long) aMaxPlayTime), check));
+		else
+			tvMusicTime.setText(String.format("%d:%d", TimeUnit.MILLISECONDS.toMinutes((long) aMaxPlayTime), check));
 	}
 	
 	public void setSeekBarPlayTime(double aStartTime) {
-		tvPlayingTime.setText(String.format("%d:%d", 
-	            TimeUnit.MILLISECONDS.toMinutes((long) aStartTime),
-	            TimeUnit.MILLISECONDS.toSeconds((long) aStartTime) - 
+		
+		int check = (int) (TimeUnit.MILLISECONDS.toSeconds((long) aStartTime) - 
 	            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
-	            toMinutes((long) aStartTime))));
+	            toMinutes((long) aStartTime)));
+		
+		if(check < 10)
+			tvPlayingTime.setText(String.format("%d:0%d", TimeUnit.MILLISECONDS.toMinutes((long) aStartTime), check));
+		else
+			tvPlayingTime.setText(String.format("%d:%d", TimeUnit.MILLISECONDS.toMinutes((long) aStartTime), check));			
 	}
 	
 	

@@ -67,7 +67,40 @@ public class DateCalculation {
 		String time = null;
 		
 		// 정확하게 가져오기 위해 한 시간을 뺀 전시간을 가지고 온다.
-		curHour = calendar.get(Calendar.HOUR_OF_DAY) - 1;
+		curHour = calendar.get(Calendar.HOUR_OF_DAY);
+		
+		if(curHour == 2 | curHour == 3 | curHour == 4)
+			curHour = 2;
+		if(curHour == 5 | curHour == 6 | curHour == 7)
+			curHour = 5;
+		if(curHour == 8 | curHour == 9 | curHour == 10)
+			curHour = 8;
+		if(curHour == 11 | curHour == 12 | curHour == 13)
+			curHour = 11;
+		if(curHour == 14 | curHour == 15 | curHour == 16)
+			curHour = 14;
+		if(curHour == 17 | curHour == 18 | curHour == 19)
+			curHour = 17;
+		if(curHour == 20 | curHour == 21 | curHour == 22)
+			curHour = 20;
+		if(curHour == 23 | curHour == 0 | curHour == 1)
+			curHour = 23;
+			
+		if(curHour < 10)
+			time = "0" + String.valueOf(curHour);
+		else
+			time = String.valueOf(curHour);
+		
+		return time + "00";
+	}
+	
+	public String realTime( ) {
+		Calendar calendar = null;
+		calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+		
+		String time = null;
+		curHour = calendar.get(Calendar.HOUR_OF_DAY);
 		
 		if(curHour < 10)
 			time = "0" + String.valueOf(curHour);
@@ -75,7 +108,7 @@ public class DateCalculation {
 			time = String.valueOf(curHour);
 		
 		return time + "00";
-	}	
+	}
 	
 	private String checkFormat(int aMonth, int aDay) {
 

@@ -15,6 +15,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -23,6 +25,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.fatdog.WeatherMusic.domain.WeatherInfo;
 import com.fatdog.WeatherMusic.reuse.etc.BackPressCloseHandler;
 import com.fatdog.WeatherMusic.reuse.etc.DateCalculation;
 import com.fatdog.WeatherMusic.reuse.etc.LocationPosition;
@@ -36,22 +39,26 @@ import com.naver.wcs.WCSLogEventAPI;
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 	public Context wcsContext = null;
 	
+	public static int LOCATION_SEARCH_END = 0;
 	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0;
 	private static final long MIN_TIME_BW_UPDATES = 0;
-	
+
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	private BackPressCloseHandler backPressCloseHandler;
 	private int currentMenuIndex = -1;
 	
 	private Geocoder coder;
-	private double lattitude;
-	private double longitude;
+	private double lattitude = 0.0;
+	private double longitude = 0.0;
 	private List<Address> list;
-	private boolean isNetworkEnabled;
 	private LocationManager locationManager;
 	private boolean startNetworkSearch = true;
 	private String finalLocation;
 	private LocationListener networkListener;
+	
+	private String skyValue;
+	private String ptyValue;
+	private WeatherInfo weatherInfo;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +68,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		backPressCloseHandler = new BackPressCloseHandler(this);
 		setContentView(R.layout.activity_main);
 		
+		coder = new Geocoder(MainActivity.this);
+		
+		// 네이버 애널리틱스의 시작
 		WCSLogEventAPI wcslog = WCSLogEventAPI.getInstance(wcsContext); 
 		wcslog.onTrackSite((Activity)wcsContext, "MainActivity");
 
@@ -71,7 +81,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	@Override
 	protected void onResume( ) {
 		super.onResume();
-	//	defineLocation( );		
+		defineLocation( ); // 위치 추적의 시작		
 	}
 	
 	@Override
@@ -100,9 +110,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	public void defineLocation() {
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-		// Network 수신가능한 상태인지 판단한다.
-		isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
 		// 위치가 바꼈을때 사용 할 네트워크 수신자를 위한 리스너
 		networkListener = new LocationListener() {
 			public void onLocationChanged(Location location) {
@@ -112,16 +119,18 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 					startNetworkSearch = false;
 					if (location != null) {
 						// 새로운 위치로 업데이트 한다.
+						Log.i("js", "net enter listener");
 						lattitude = location.getLatitude();
 						longitude = location.getLongitude();
-						Log.i("js", "net enter listener");
+						
 					} else {
-						Log.i("js", "net enter null");
 						// 만약 위치가 바뀌지 않았을 경우 이전의 데이터를 가지고 온다.
+						Log.i("js", "net enter null");
 						location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 						lattitude = location.getLatitude();
 						longitude = location.getLongitude();
 					}
+					
 					if (lattitude != 0 && longitude != 0) // 위치정보를 받아 왔을 경우에
 						searchLocation();
 				}
@@ -171,12 +180,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	}
 	
 	HttpRequester.NetworkResponseListener getCurrentState = new HttpRequester.NetworkResponseListener() {
-		
 		@Override
 		public void onSuccess(JSONObject jsonObject) {
 			JSONArray jsonArray = new JSONArray( );
-			String currentTemp = null;
-				
+			
 			try {
 				jsonArray = jsonObject.getJSONArray("item");
 			} catch (JSONException e) {
@@ -188,23 +195,33 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 					JSONObject tempJSONObject = jsonArray.getJSONObject(i);
 					
 					if(tempJSONObject.getString("category").equals("SKY"))
-						currentTemp = tempJSONObject.getString("obsrValue");
+						skyValue = tempJSONObject.getString("obsrValue");
 					
 					if(tempJSONObject.getString("category").equals("PTY"))
-						currentTemp = tempJSONObject.getString("obsrValue");
+						ptyValue = tempJSONObject.getString("obsrValue");
 					
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			}
+			DateCalculation date = new DateCalculation();
+			weatherInfo = new WeatherInfo(skyValue, ptyValue, date.realTime());
+			
+			LOCATION_SEARCH_END = 1;	
+			
+			Log.i("lastfm", weatherInfo.weatherInformation());
 		}
 		
 		@Override
 		public void onFail() {
 			Toast.makeText(getApplicationContext(), R.string.json_error, Toast.LENGTH_SHORT).show();	
 		}
-	};	
-
+	};
+	
+	public WeatherInfo getWeatherInfo( ) {
+		return weatherInfo;
+	}
+	
 	@Override
 	public void onBackPressed() {
 		backPressCloseHandler.onBackPressed();
