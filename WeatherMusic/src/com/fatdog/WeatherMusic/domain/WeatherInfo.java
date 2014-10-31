@@ -1,5 +1,7 @@
 package com.fatdog.WeatherMusic.domain;
 
+import android.util.Log;
+
 public class WeatherInfo {
 	private int skyInfo;
 	private int ptyInfo;
@@ -8,6 +10,8 @@ public class WeatherInfo {
 	public WeatherInfo( ) { }
 	
 	public WeatherInfo(String aSky, String aPty, String aHour) {
+		
+		Log.i("timetime", aSky + ","+ aPty + ","+ aHour);
 		skyInfo = Integer.parseInt(aSky);
 		ptyInfo = Integer.parseInt(aPty);
 		curHour = Integer.parseInt(aHour);
@@ -26,7 +30,6 @@ public class WeatherInfo {
 			else
 				weatherText = "저녁";
 		}
-		
 		else if(ptyInfo == 1 | ptyInfo == 2 | ptyInfo == 3) { // 비가 내릴 떄
 			weatherText = "비";
 		}

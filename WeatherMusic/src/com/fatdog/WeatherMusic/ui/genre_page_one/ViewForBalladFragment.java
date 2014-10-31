@@ -161,7 +161,6 @@ public class ViewForBalladFragment extends AbstractViewForFragment{
 	}
 	
 	public void setSeekBarPlayTime(double aStartTime) {
-		
 		int check = (int) (TimeUnit.MILLISECONDS.toSeconds((long) aStartTime) - 
 	            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
 	            toMinutes((long) aStartTime)));

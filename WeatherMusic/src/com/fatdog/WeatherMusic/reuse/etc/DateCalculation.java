@@ -94,7 +94,7 @@ public class DateCalculation {
 		else
 			time = String.valueOf(curHour);
 		
-		Log.i("lastfm", ""+curHour);
+		Log.i("timetime", ""+curHour);
 		return time + "00";
 	}
 	

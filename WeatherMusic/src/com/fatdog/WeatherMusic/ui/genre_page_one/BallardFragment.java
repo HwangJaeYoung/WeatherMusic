@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,20 +50,20 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 		mMediaPlayer = wma.getMediaPlayer();
 		trackInfo = new ArrayList<TrackList>( );	
 		
-		mHandlerThread = new HandlerThread("SearchThread");
+		mHandlerThread = new HandlerThread("SearchThread"); // 위치추적 통신이 MainActivity에서 끝났는지 확인하기 위한 스레드
 		mHandlerThread.start();
 		musicHandler = new Handler(mHandlerThread.getLooper());
 		musicHandler.post(new Runnable( ) {
 			@Override
 			public void run() {
 				for ( ; ; ) {
-					if (MainActivity.LOCATION_SEARCH_END == 1) {
+					if (MainActivity.LOCATION_SEARCH_END == 1) { // 위치추적 통신이 끝났으면
 						MainActivity getMainAct = (MainActivity)getActivity( );
 						final WeatherInfo weatherInfo = getMainAct.getWeatherInfo();
 						
-						searchLastFmVidieKey("alternative_folk_rock");
+						searchLastFmVidieKey("alternative_folk_rock"); // 노래를 오현 서버에 가서 가지고 온다.
 						
-						mHandler.post(new Runnable() {
+						mHandler.post(new Runnable() { // 메인 스레드 에서는 기본적인 이미지와 멘트를 추가한다.
 							public void run() {
 								view.setFirstAlbumCover(weatherInfo.weatherInformation());
 								view.setFirstWeatherInfo(weatherInfo.weatherInformation());
@@ -81,7 +80,8 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// this는 Controller를 위해서 넣어주는 것이다.
         view = new ViewForBalladFragment(getActivity( ), inflater, container, this); // 뷰를 생성해 낸다.
-		mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() { // 노래를 다 들었을 경우에
+		
+        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() { // 노래를 다 들었을 경우에
 			@Override
 			public void onCompletion(MediaPlayer mp) {
 				mMediaPlayer.stop();
@@ -151,10 +151,11 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 	}
 	
 	@Override
-	public void seekFromUser(int aProgress) {
+	public void seekFromUser(int aProgress) { // 마음대로 아무 위치에서나 재생하기 위한 것.
 		  mMediaPlayer.seekTo(aProgress);
 	}
 	
+	// 앨범 커버를 lastfm에가서 가지고 온다.
 	HttpRequesterForLastFmCover.NetworkResponseListener getLastfmCoverListener = new HttpRequesterForLastFmCover.NetworkResponseListener() {	
 		@Override
 		public void onSuccess(JSONObject jsonObject) {
@@ -175,7 +176,7 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 					e.printStackTrace();
 				}
 			}
-			view.setAlbumCover(image);
+			view.setAlbumCover(image); // 가지고 온 앨범 커버 이미지를 교체한다.
 		}
 		
 		@Override
@@ -201,6 +202,7 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 				}
 			}
 			
+			// 통신이 끝났으므로 프로그레스바를 없애고 재생을 위해 버튼을 보여준다.
 			mHandler.post(new Runnable() {
 				public void run() {
 					view.musicLoadingEnd();
@@ -217,6 +219,7 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 		public void onFail() { }
 	};
 	
+	// 구글 데이터에서 rtsp를 가지고온 다음에 노래를 재생한다.
 	HttpRequesterForRTSP.NetworkResponseListener getRTSPListener = new HttpRequesterForRTSP.NetworkResponseListener() {
 		@Override
 		public void onSuccess(JSONObject jsonObject) {
@@ -232,7 +235,7 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 					String rtspString = urlObject.getString("url");
 					String resultRTSP = rtspString.split(":")[0];
 					
-					if(resultRTSP.equals("rtsp")) {
+					if(resultRTSP.equals("rtsp")) { // rtsp catch
 						MUSIC_URL = rtspString;						
 					}
 				}
@@ -241,8 +244,8 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 			}						
 			
 			if(MUSIC_URL != null) {
-			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			mMediaPlayer.reset();
+				mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+				mMediaPlayer.reset(); // MediaPlayer 생명주기에 따른 것
 			
 			try {
 				mMediaPlayer.setDataSource(MUSIC_URL);
@@ -264,11 +267,10 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 				Toast.makeText(getActivity(), "prepare IOException", Toast.LENGTH_LONG).show();
 			}
 			
-			mMediaPlayer.start();
-			mHandler.postDelayed(UpdateSongTime, 1000);
-			view.setSeekBarMax(mMediaPlayer.getDuration());
+			mMediaPlayer.start(); // 스레드의 시작
+			mHandler.postDelayed(UpdateSongTime, 1000); // 1초마다 업데이트 한다.
+			view.setSeekBarMax(mMediaPlayer.getDuration()); // 최대 시간을 가지고 온다.
 			view.setSeekBarPlayTime(startTime);
-			
 			}
 			
 			else
@@ -283,9 +285,9 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 	private Runnable UpdateSongTime = new Runnable() {
 		public void run() {
 			startTime = mMediaPlayer.getCurrentPosition();
-			view.setSeekBarPlayTime(startTime);
-	        view.setPregressAboutSeekBar((int)startTime);
-	        mHandler.postDelayed(this, 1000);
+			view.setSeekBarPlayTime(startTime); // 이동시간 변경
+	        view.setPregressAboutSeekBar((int)startTime); // 프로그레스바의 이동
+	        mHandler.postDelayed(this, 1000); // 1초 마다 실행한다.
 		}
 	};
 	
@@ -294,26 +296,25 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 		if (firstPlaying == false) {
 			serchRTSPurlFromYouTubeServer(); // 처음에는 노래를 가지고 온다.
 			view.pauseButtonClicked();
-			firstPlaying = true;
+			firstPlaying = true; // 들었으므로 플래그 변환
 		} else {
-			if (mMediaPlayer.isPlaying()) {
-				length = mMediaPlayer.getCurrentPosition();
-				mMediaPlayer.pause();
-				view.startButtonClicked();
-			} else {
+			if (mMediaPlayer.isPlaying()) { // 노래를 듣고 있다. 즉 노래를 멈추기 위해
+				length = mMediaPlayer.getCurrentPosition(); // 듣고 있었떤 위치의 저장
+				mMediaPlayer.pause(); // 노래 일시정지
+				view.startButtonClicked(); 
+			} else { // 노래 재생
 
-				mMediaPlayer.seekTo(length);
-				mMediaPlayer.start();
+				mMediaPlayer.seekTo(length); // 듣고 있었던 위치를 재생한다.
+				mMediaPlayer.start(); // 노래를 시작한다.
 				view.pauseButtonClicked();
 			}
 		}
 	}
 
 	@Override
-	public void nextMusicStart() {
+	public void nextMusicStart() { // 다음 노래 버튼을 클릭하였을 때
 		view.pauseButtonClicked();
 		mMediaPlayer.stop();
-		mMediaPlayer.reset();
-		serchRTSPurlFromYouTubeServer( );	
+		serchRTSPurlFromYouTubeServer( ); // 노래 재생	
 	}
 }

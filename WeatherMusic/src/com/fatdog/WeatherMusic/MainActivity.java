@@ -166,15 +166,15 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
 		finalLocation = si + " " + gu; // 최종적인 현재의 위치정보
 		
-		if(finalLocation == null) {
+		if(finalLocation == null) { // 위치정보를 못 가지고 왔을 시에
 			showSettingsAlert( );	
 		} else {
-			LocationPosition lp = new LocationPosition(finalLocation);
+			LocationPosition lp = new LocationPosition(finalLocation); // nx, ny변환위해서 호출
 			getTodayWeather(lp.getNX(), lp.getNY()); // 현재 날씨 정보를 가져오기 위한 통신 시작
 		}
 	}
 	
-	public void showSettingsAlert() {
+	public void showSettingsAlert() { // 네트워크 오류 때 사용하는 메소드
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
 		// Setting Dialog Title
@@ -192,11 +192,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 						finish(); // 종료
 					}
 				});
-		// Showing Alert Message
 		alertDialog.show();
 	}
 	
-	public void getTodayWeather(int aNX, int aNY) {
+	public void getTodayWeather(int aNX, int aNY) { // 현재 위치에 따른 현재의 날씨를 가지고 온다.
 		DateCalculation date = new DateCalculation();
 		
 		CurrentWeatherRequest currentWeatherRequest = new CurrentWeatherRequest(getApplicationContext());
@@ -207,6 +206,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		}
 	}
 	
+	// open api에서 현재의 기상 상태를 가지고 온다.
 	HttpRequester.NetworkResponseListener getCurrentState = new HttpRequester.NetworkResponseListener() {
 		@Override
 		public void onSuccess(JSONObject jsonObject) {
@@ -222,10 +222,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 				try {
 					JSONObject tempJSONObject = jsonArray.getJSONObject(i);
 					
-					if(tempJSONObject.getString("category").equals("SKY"))
+					if(tempJSONObject.getString("category").equals("SKY")) // 날씨정보
 						skyValue = tempJSONObject.getString("obsrValue");
 					
-					if(tempJSONObject.getString("category").equals("PTY"))
+					if(tempJSONObject.getString("category").equals("PTY")) // 강수정보
 						ptyValue = tempJSONObject.getString("obsrValue");
 					
 				} catch (JSONException e) {
@@ -233,12 +233,17 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 				}
 			}
 			
+			// 기상청에서 데이터를 주지 않는 경우가 있기 때문에 디폴트 값
+			if(skyValue == null)
+				ptyValue = "1"; // 맑음 디폴트
+			
+			if(ptyValue == null) // 
+				ptyValue = "0";
+			
 			DateCalculation date = new DateCalculation();
-			weatherInfo = new WeatherInfo(skyValue, ptyValue, date.getHour());
+			weatherInfo = new WeatherInfo(skyValue, ptyValue, date.getHour()); // 도메인 생성한다.
 			
-			LOCATION_SEARCH_END = 1;	
-			
-			Log.i("lastfm", weatherInfo.weatherInformation());
+			LOCATION_SEARCH_END = 1; // 위치추적 통신이 끝났다는 것을 프래그먼트에게 알려준다.	
 		}
 		
 		@Override
