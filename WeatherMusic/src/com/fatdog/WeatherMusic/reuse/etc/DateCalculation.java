@@ -81,7 +81,7 @@ public class DateCalculation {
 		
 		int curMunute = calendar.get(Calendar.MINUTE);
 		
-		if(curMunute < 35)
+		if(curMunute < 45)
 			curHour -= 1;
 		
 		if(curHour == -1) {
@@ -94,22 +94,7 @@ public class DateCalculation {
 		else
 			time = String.valueOf(curHour);
 		
-		return time + "00";
-	}
-	
-	public String realTime( ) {
-		Calendar calendar = null;
-		calendar = Calendar.getInstance();
-		calendar.setTime(new Date());
-		
-		String time = null;
-		curHour = calendar.get(Calendar.HOUR_OF_DAY);
-		
-		if(curHour < 10)
-			time = "0" + String.valueOf(curHour);
-		else
-			time = String.valueOf(curHour);
-		
+		Log.i("lastfm", ""+curHour);
 		return time + "00";
 	}
 	

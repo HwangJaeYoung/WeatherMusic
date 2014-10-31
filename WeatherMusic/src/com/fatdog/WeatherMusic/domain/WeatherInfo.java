@@ -24,7 +24,7 @@ public class WeatherInfo {
 					weatherText = "흐림";
 			}
 			else
-				weatherText = "흐림";
+				weatherText = "저녁";
 		}
 		
 		else if(ptyInfo == 1 | ptyInfo == 2 | ptyInfo == 3) { // 비가 내릴 떄

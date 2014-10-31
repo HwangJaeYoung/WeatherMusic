@@ -75,8 +75,7 @@
             android:layout_width="20dp"
             android:layout_height="21dp"
             android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/snow_icon" />
+            android:layout_marginRight="5dp"/>
 
         <TextView
             android:id="@+id/tv_climate"

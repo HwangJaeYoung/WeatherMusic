@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.fatdog.WeatherMusic.MainActivity;
 import com.fatdog.WeatherMusic.domain.CoverImage;
 import com.fatdog.WeatherMusic.domain.TrackList;
+import com.fatdog.WeatherMusic.domain.WeatherInfo;
 import com.fatdog.WeatherMusic.reuse.etc.WeatherMusicApplication;
 import com.fatdog.WeatherMusic.reuse.network.HttpRequesterForLastFm;
 import com.fatdog.WeatherMusic.reuse.network.HttpRequesterForLastFmCover;
@@ -35,6 +36,7 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 	private int length;
 	private int musicPlayCount = 0;
 	private boolean firstPlaying = false;
+	private boolean reloadingFlag = false;
 	private MediaPlayer mMediaPlayer = null;
 	private ArrayList<TrackList> trackInfo;
 	private double startTime = 0;
@@ -57,12 +59,15 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 			public void run() {
 				for ( ; ; ) {
 					if (MainActivity.LOCATION_SEARCH_END == 1) {
-						MainActivity.LOCATION_SEARCH_END = 0;
+						MainActivity getMainAct = (MainActivity)getActivity( );
+						final WeatherInfo weatherInfo = getMainAct.getWeatherInfo();
+						
 						searchLastFmVidieKey("alternative_folk_rock");
 						
 						mHandler.post(new Runnable() {
 							public void run() {
-								view.setFirstAlbumCover();
+								view.setFirstAlbumCover(weatherInfo.weatherInformation());
+								view.setFirstWeatherInfo(weatherInfo.weatherInformation());
 							}
 						});	
 						break;
@@ -85,6 +90,7 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 				serchRTSPurlFromYouTubeServer( ); // 노래를 가지고 온다. 즉 재생한다.	 				
 			}
 		});
+
         return view.getRoot();
     }
 	
@@ -95,19 +101,33 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 	}
 	
 	public void serchRTSPurlFromYouTubeServer( ) { // rtsp프로토콜을 구글에서 가지고 온다.
-		TrackList tr = trackInfo.get(musicPlayCount);
-		searchLastFmCover(tr.getArtist(), tr.getTitle()); // 앨범 커버를 가지고 온다.
+		
+		if(musicPlayCount == 10) { // 노래 목록을 모두 사용했을 경우
+			musicPlayCount = 0; // 노래 재생횟수를 0으로 초기화
+			searchLastFmVidieKey("alternative_folk_rock");
+			view.setSeekBarMax(0);
+			view.setSeekBarPlayTime(0);
+			view.progressOn( ); // 사용자가 키를 못눌리게 한다.
+			trackInfo.clear(); // 리스트를 초기화 시켜준다.
+			reloadingFlag = true; // 다시 로드 했다는 것을 알려준다.
+		}
+		
+		else { // 일반적인 통신
+			TrackList tr = trackInfo.get(musicPlayCount);
+			searchLastFmCover(tr.getArtist(), tr.getTitle()); // 앨범 커버를 가지고 온다.
 
-		musicPlayCount++; // 한곡을 들었다.
-		
-		view.setMusicTitle(tr.getTitle());
-		view.setMusicArtist(tr.getArtist());
-		
-		RTSPurlRequest RTSPurlRequest = new RTSPurlRequest(getActivity());
-		try {
-			RTSPurlRequest.getRTSTurlAbuoutYouTubeUrl(tr.getVideoKey(), getRTSPListener);
-		} catch (JSONException e) {
-			e.printStackTrace();
+			musicPlayCount++; // 한곡을 들었다.
+
+			view.setMusicTitle(tr.getTitle());
+			view.setMusicArtist(tr.getArtist());
+
+			RTSPurlRequest RTSPurlRequest = new RTSPurlRequest(getActivity());
+			try {
+				RTSPurlRequest.getRTSTurlAbuoutYouTubeUrl(tr.getVideoKey(),
+						getRTSPListener);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -187,7 +207,10 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 				}
 			});	
 			
-			Log.i("lastfm", "" + trackInfo.size());
+			if(reloadingFlag == true) { // 다시 노래 목록을 가지고 온거라면
+				reloadingFlag = false; // 플레그를 초기화 시켜주고
+				serchRTSPurlFromYouTubeServer( ); // 다시 통신을 시작한다. 시작시키기 위해서 
+			}
 		}
 
 		@Override
@@ -293,5 +316,4 @@ public class BallardFragment extends Fragment implements ViewForBalladFragment.C
 		mMediaPlayer.reset();
 		serchRTSPurlFromYouTubeServer( );	
 	}
-
 }

@@ -88,6 +88,13 @@ public class ViewForBalladFragment extends AbstractViewForFragment{
 	public void musicLoadingEnd( ) {
 		pbMusicLoading.setVisibility(View.INVISIBLE);
 		btPlayPause.setVisibility(View.VISIBLE);
+		bt_next.setVisibility(View.VISIBLE);
+	}
+	
+	public void progressOn( ) {
+		pbMusicLoading.setVisibility(View.VISIBLE);
+		btPlayPause.setVisibility(View.INVISIBLE);
+		bt_next.setVisibility(View.INVISIBLE);
 	}
 	
 	public void startButtonClicked( ) {
@@ -110,8 +117,34 @@ public class ViewForBalladFragment extends AbstractViewForFragment{
 		ivAlbumCover.setImageUrl(anImage.getCoverURL());
 	}
 	
-	public void setFirstAlbumCover( ) {
-		ivAlbumCover.setImageResource(R.drawable.rain);
+	public void setFirstAlbumCover(String aWeatherInfo) {
+		int resourceId = 0;
+		
+		if(aWeatherInfo.equals("맑음"))
+			resourceId = R.drawable.sunny;
+		else if(aWeatherInfo.equals("흐림")) 
+			resourceId = R.drawable.cloudy;
+		else if(aWeatherInfo.equals("비"))
+			resourceId = R.drawable.rain;
+		else if(aWeatherInfo.equals("저녁"))
+			resourceId = R.drawable.night;
+		
+		ivAlbumCover.setImageResource(resourceId);
+	}
+	
+	public void setFirstWeatherInfo(String aWeatherInfo) {
+		int textId = 0;
+		
+		if(aWeatherInfo.equals("맑음"))
+			textId = R.string.sunny_text;
+		else if(aWeatherInfo.equals("흐림")) 
+			textId = R.string.cloudy_text;
+		else if(aWeatherInfo.equals("비"))
+			textId = R.string.rain_text;
+		else if(aWeatherInfo.equals("저녁"))
+			textId = R.string.night_text;
+		
+		tvArtist.setText(textId);
 	}
 	
 	public void setSeekBarMax(int aMaxPlayTime) {

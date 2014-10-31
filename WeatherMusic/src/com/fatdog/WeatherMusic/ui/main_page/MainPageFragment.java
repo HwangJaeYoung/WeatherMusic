@@ -1,7 +1,5 @@
 package com.fatdog.WeatherMusic.ui.main_page;
 
-import com.fatdog.WeatherMusic.ui.genre_page_one.ViewForBalladFragment;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;

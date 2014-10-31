@@ -1,10 +1,7 @@
 package com.fatdog.WeatherMusic.reuse.network;
 
 import org.apache.http.Header;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.util.Log;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 

@@ -2,7 +2,6 @@ package com.fatdog.WeatherMusic.ui.navigation_drawer_menu;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fatdog.WeatherMusic.R;

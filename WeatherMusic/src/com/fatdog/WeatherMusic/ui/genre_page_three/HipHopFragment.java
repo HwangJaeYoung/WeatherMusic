@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import com.fatdog.WeatherMusic.reuse.etc.WeatherMusicApplication;
 import com.fatdog.WeatherMusic.reuse.network.HttpRequesterForRTSP;
 import com.fatdog.WeatherMusic.reuse.network.RTSPurlRequest;
-import com.fatdog.WeatherMusic.ui.genre_page_one.ViewForBalladFragment;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;

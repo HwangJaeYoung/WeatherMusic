@@ -6,5 +6,11 @@
     <string name="json_error"> 데이터를 가지고 오지 못하였습니다. 다시 시도해 주세요.!! </string>
     
     <string name="title_section1"> WeatherMusic </string>
+    
+    <string name="sunny_text"> 구름없이 맑은 날 </string>
+    <string name="cloudy_text"> 구름 많은 흐린 날 </string>
+    <string name="night_text"> 깜깜한 밤이 되었다  </string>
+    <string name="rain_text"> 비가 온다 주르륵 </string>
+    
 
 </resources>

@@ -8,15 +8,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -109,7 +109,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	// 위치를 추적하는 메소드
 	public void defineLocation() {
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
+		
 		// 위치가 바꼈을때 사용 할 네트워크 수신자를 위한 리스너
 		networkListener = new LocationListener() {
 			public void onLocationChanged(Location location) {
@@ -139,6 +139,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 			public void onProviderEnabled(String provider) { }
 			public void onProviderDisabled(String provider) { }
 		};
+
 		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, networkListener);
 	}
 
@@ -164,8 +165,35 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		}
 
 		finalLocation = si + " " + gu; // 최종적인 현재의 위치정보
-		LocationPosition lp = new LocationPosition(finalLocation);
-		getTodayWeather(lp.getNX(), lp.getNY()); // 현재 날씨 정보를 가져오기 위한 통신 시작
+		
+		if(finalLocation == null) {
+			showSettingsAlert( );	
+		} else {
+			LocationPosition lp = new LocationPosition(finalLocation);
+			getTodayWeather(lp.getNX(), lp.getNY()); // 현재 날씨 정보를 가져오기 위한 통신 시작
+		}
+	}
+	
+	public void showSettingsAlert() {
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+		// Setting Dialog Title
+		alertDialog.setTitle("네트워크 연결");
+
+		// Setting Dialog Message
+		alertDialog.setMessage("네트워크에 접속할 수 없습니다." + "\n"
+				+ "네트워크 연결상태를 확인해 주세요." + "\n");
+
+		// on pressing cancel button
+		alertDialog.setNegativeButton("확인",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+						finish(); // 종료
+					}
+				});
+		// Showing Alert Message
+		alertDialog.show();
 	}
 	
 	public void getTodayWeather(int aNX, int aNY) {
@@ -204,8 +232,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 					e.printStackTrace();
 				}
 			}
+			
 			DateCalculation date = new DateCalculation();
-			weatherInfo = new WeatherInfo(skyValue, ptyValue, date.realTime());
+			weatherInfo = new WeatherInfo(skyValue, ptyValue, date.getHour());
 			
 			LOCATION_SEARCH_END = 1;	
 			
@@ -218,7 +247,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		}
 	};
 	
-	public WeatherInfo getWeatherInfo( ) {
+	public WeatherInfo getWeatherInfo( ) { // 날씨 도메인을 가지고 온다.
 		return weatherInfo;
 	}
 	
