@@ -77,13 +77,8 @@ public class DateCalculation {
 		String time = null;
 		
 		// 정확하게 가져오기 위해 한 시간을 뺀 전시간을 가지고 온다.
-		curHour = calendar.get(Calendar.HOUR_OF_DAY);
-		
-		int curMunute = calendar.get(Calendar.MINUTE);
-		
-		if(curMunute < 45)
-			curHour -= 1;
-		
+		curHour = calendar.get(Calendar.HOUR_OF_DAY) - 1;
+				
 		if(curHour == -1) {
 			curHour = 23;
 			dateCheck = true;

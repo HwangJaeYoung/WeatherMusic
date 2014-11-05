@@ -31,8 +31,8 @@ import com.fatdog.WeatherMusic.reuse.etc.DateCalculation;
 import com.fatdog.WeatherMusic.reuse.etc.LocationPosition;
 import com.fatdog.WeatherMusic.reuse.network.CurrentWeatherRequest;
 import com.fatdog.WeatherMusic.reuse.network.HttpRequester;
-import com.fatdog.WeatherMusic.ui.genre_page_one.BallardFragment;
-import com.fatdog.WeatherMusic.ui.genre_page_three.HipHopFragment;
+import com.fatdog.WeatherMusic.ui.genre_alternative.AlternativeFragment;
+import com.fatdog.WeatherMusic.ui.genre_hiphop.HipHopFragment;
 import com.fatdog.WeatherMusic.ui.navigation_drawer_menu.NavigationDrawerFragment;
 import com.naver.wcs.WCSLogEventAPI;
 
@@ -95,7 +95,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             	// add는 기존의 것을 그대로 놔두며 추가하고, replace는 기존의 것을 제거하고 추가한다.
             	// 동적으로 프래그먼트를 정의하며, 레이아웃에 추가 될 때 라이프사이클을 돈다.
                 case 0: 
-                	transaction.replace(R.id.container, new BallardFragment()).commit();
+                	transaction.replace(R.id.container, new AlternativeFragment()).commit();
                     break;
                 case 1: 
                 	transaction.replace(R.id.container, new HipHopFragment()).commit();
