@@ -2,6 +2,7 @@ package com.fatdog.WeatherMusic.ui.navigation_drawer_menu;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fatdog.WeatherMusic.R;
@@ -9,7 +10,7 @@ import com.fatdog.WeatherMusic.reuse.listview.mvc.AbstractViewForListViewItem;
 import com.fatdog.WeatherMusic.reuse.listview.mvc.IListViewItem;
 
 public class ViewForNavigationDrawerMenuListViewItem extends AbstractViewForListViewItem {
-	TextView tv_contents;
+	private ImageView ivListItem; 
 
 	public ViewForNavigationDrawerMenuListViewItem(Context context) {
 		super(context);
@@ -22,7 +23,7 @@ public class ViewForNavigationDrawerMenuListViewItem extends AbstractViewForList
 
 	@Override
 	protected void initViews() {
-		tv_contents = (TextView)findViewById_(R.id.tv_list_item);
+		ivListItem = (ImageView)findViewById(R.id.iv_list_item);
 	}
 
 	@Override
@@ -31,19 +32,19 @@ public class ViewForNavigationDrawerMenuListViewItem extends AbstractViewForList
 	@Override
 	protected void setData(IListViewItem aIListViewItem) {
 		DrawerMenuItem drawerMenuItem = (DrawerMenuItem) aIListViewItem;
-		tv_contents.setText(drawerMenuItem.getText());
+		ivListItem.setImageResource(drawerMenuItem.getResourceId());
 	}
 
 	// 여기서의 item은 다른 것들과 다르게 데이터가 변하지 않는다.
 	public static class DrawerMenuItem implements IListViewItem {
-		private String text;
+		private int resourceId;
 
-		public DrawerMenuItem(String aText) {
-			text = aText;
+		public DrawerMenuItem(int aResourceId) {
+			resourceId = aResourceId;
 		}
 
-		public String getText() {
-			return text;
+		public int getResourceId() {
+			return resourceId;
 		}
 	}
 }

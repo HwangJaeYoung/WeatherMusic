@@ -1,16 +1,22 @@
 package com.fatdog.WeatherMusic.ui.navigation_drawer_menu;
 
+import java.io.InputStream;
+import java.net.URL;
+
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,8 +24,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.facebook.widget.ProfilePictureView;
 import com.fatdog.WeatherMusic.R;
 
 public class NavigationDrawerFragment extends Fragment {
@@ -31,7 +40,13 @@ public class NavigationDrawerFragment extends Fragment {
 	private View mFragmentContainerView;
 	private int mCurrentSelectedPosition = 0;
 	private View root;
+	
+	private String userId;
+	private String userName;
 
+	private TextView tvNavigationDrawerMenuUser;	
+	private ProfilePictureView profilePicture;
+	
 	public NavigationDrawerFragment() { }
 
 	@Override
@@ -43,6 +58,9 @@ public class NavigationDrawerFragment extends Fragment {
 
 		// 첫번째 또는 마지막에 선택된 항목을 보여준다.
 		selectItem(mCurrentSelectedPosition);
+		
+		userName = getActivity().getIntent().getStringExtra("userName");
+		userId = getActivity().getIntent().getStringExtra("userId");
 	}
 
 	@Override
@@ -57,7 +75,6 @@ public class NavigationDrawerFragment extends Fragment {
 		root = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
 		mDrawerListView = (ListView) root.findViewById(R.id.lv_navigation_drawer_menu);
 	
-		
 		mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -67,15 +84,36 @@ public class NavigationDrawerFragment extends Fragment {
 		
 		ArrayAdapterForNavigationDrawerMenuListView arrayAdapter = new ArrayAdapterForNavigationDrawerMenuListView(getActivity(), 0);
 
-		arrayAdapter.add(new ViewForNavigationDrawerMenuListViewItem.DrawerMenuItem("Alternavtive"));
-		arrayAdapter.add(new ViewForNavigationDrawerMenuListViewItem.DrawerMenuItem("HipHop"));
-		arrayAdapter.add(new ViewForNavigationDrawerMenuListViewItem.DrawerMenuItem("R&B"));
-		arrayAdapter.add(new ViewForNavigationDrawerMenuListViewItem.DrawerMenuItem("Acoustic"));	
+		arrayAdapter.add(new ViewForNavigationDrawerMenuListViewItem.DrawerMenuItem(R.drawable.alternative));
+		arrayAdapter.add(new ViewForNavigationDrawerMenuListViewItem.DrawerMenuItem(R.drawable.hiphop));
+		arrayAdapter.add(new ViewForNavigationDrawerMenuListViewItem.DrawerMenuItem(R.drawable.acoustic));
+		arrayAdapter.add(new ViewForNavigationDrawerMenuListViewItem.DrawerMenuItem(R.drawable.rnb));	
 		
 		mDrawerListView.setAdapter(arrayAdapter);
+		
+		profilePicture = (ProfilePictureView)root.findViewById(R.id.profilePicture);
+		tvNavigationDrawerMenuUser = (TextView)root.findViewById(R.id.tv_navigation_drawer_menu_user);
+		
+		profilePicture.setProfileId(userId);
+		tvNavigationDrawerMenuUser.setText(userName);		
+		
 		return root;
 	}
-
+	
+	public Bitmap getUserPic(String userID) {
+	    String imageURL;
+	    Bitmap bitmap = null;
+	    
+	    imageURL = "http://graph.facebook.com/"+userID+"/picture?type=small";
+	    try {
+	        bitmap = BitmapFactory.decodeStream((InputStream)new URL(imageURL).getContent());
+	    } catch (Exception e) {
+	        Log.d("TAG", "Loading Picture FAILED");
+	        e.printStackTrace();
+	    }
+	    return bitmap;
+	}
+	
 	// 사용자가 드로워 메뉴 중 하나를 선택 하였을 때
 	private void selectItem(int position) {
 		mCurrentSelectedPosition = position;

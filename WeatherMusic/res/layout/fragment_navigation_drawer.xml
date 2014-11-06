@@ -1,16 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="615dp"
-        android:background="#24282d"
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:background="#1f2b37"
         android:orientation="vertical" >
-        
+
         <!-- listview -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:background="#253442"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <com.facebook.widget.ProfilePictureView
+                android:id="@+id/profilePicture"
+                android:layout_width="60dp"
+                android:layout_height="60dp" />
+
+            <TextView
+                android:id="@+id/tv_navigation_drawer_menu_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="11dp"
+                android:textColor="#fff"
+                android:textSize="15sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,10 +41,29 @@
                 android:id="@+id/lv_navigation_drawer_menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#323a45"
+                android:background="#1f2b37"
                 android:choiceMode="singleChoice"
-                android:divider="#24282d"
-                android:dividerHeight="0.1dp" />
+                android:divider="#1f2b37" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="100dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center"
+            android:background="#9e9e9e" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#1f2b37"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/iv_navigation_drawer_menu_setting"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/bt_setting" />
         </LinearLayout>
     </LinearLayout>
 

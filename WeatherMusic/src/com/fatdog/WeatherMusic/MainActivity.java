@@ -60,6 +60,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	private String ptyValue;
 	private WeatherInfo weatherInfo;
 	
+	private String userId;
+	private String userName;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -98,8 +101,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 	transaction.replace(R.id.container, new AlternativeFragment()).commit();
                     break;
                 case 1: 
-                	transaction.replace(R.id.container, new HipHopFragment()).commit();
-                    break;
+                	//transaction.replace(R.id.container, new HipHopFragment()).commit();
+                    //break;
                 default: // etc...
                     break;
             }

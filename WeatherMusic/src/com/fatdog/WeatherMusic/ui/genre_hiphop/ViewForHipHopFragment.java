@@ -37,7 +37,7 @@ public class ViewForHipHopFragment extends AbstractViewForFragment {
 
 	@Override
 	protected View inflate(LayoutInflater inflater, ViewGroup container) {
-		return inflater.inflate(R.layout.fragment_ballard, container, false);
+		return inflater.inflate(R.layout.fragment_alternative, container, false);
 	}
 
 	@Override

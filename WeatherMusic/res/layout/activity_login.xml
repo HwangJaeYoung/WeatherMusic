@@ -22,16 +22,25 @@
             android:layout_marginTop="350dp"
             android:src="@drawable/weather_music" />
 
-        <Button
+        <com.fatdog.WeatherMusic.reuse.etc.SubmitButton
             android:id="@+id/bt_login_page_login"
             android:layout_width="250dp"
             android:layout_height="50dp"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="50dp"
             android:background="@drawable/loginwithfacebook"
             android:textColor="#fff"
             android:textSize="20sp" />
+
+        <ProgressBar
+            android:id="@+id/pg_sign_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="52dp"
+            android:visibility="invisible" />
     </RelativeLayout>
 
 </LinearLayout>
