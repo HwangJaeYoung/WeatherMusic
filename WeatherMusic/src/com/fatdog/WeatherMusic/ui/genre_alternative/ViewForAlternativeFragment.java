@@ -17,10 +17,12 @@ import com.fatdog.WeatherMusic.domain.CoverImage;
 import com.fatdog.WeatherMusic.reuse.etc.CircularImageView;
 import com.fatdog.WeatherMusic.reuse.mvc.fragement.AbstractViewForFragment;
 
-public class ViewForAlternativeFragment extends AbstractViewForFragment{
+public class ViewForAlternativeFragment extends AbstractViewForFragment {
 	
 	private Button btPlayPause;
 	private Button bt_next;
+	private Button btLike;
+	private Button btList;
 	private TextView tvTrack;
 	private TextView tvArtist;
 	private TextView tvPlayingTime;
@@ -51,6 +53,8 @@ public class ViewForAlternativeFragment extends AbstractViewForFragment{
 		tvPlayingTime = (TextView)findViewById(R.id.tv_playing_time);
 		tvMusicTime = (TextView)findViewById(R.id.tv_music_time);
 		pbMusicLoading = (ProgressBar)findViewById(R.id.pb_music_loading);
+		btLike= (Button)findViewById(R.id.bt_like);
+		btList = (Button)findViewById(R.id.bt_list);
 	}
 
 	@Override
@@ -83,12 +87,29 @@ public class ViewForAlternativeFragment extends AbstractViewForFragment{
 				}
 			}
 		});
+		
+		btLike.setOnClickListener(new View.OnClickListener() {	
+			@Override
+			public void onClick(View v) {
+				controller.clickLike();			
+			}
+		});
+		
+		btList.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				controller.clickList();				
+			}
+		});
 	}
 	
 	public void musicLoadingEnd( ) {
 		pbMusicLoading.setVisibility(View.INVISIBLE);
 		btPlayPause.setVisibility(View.VISIBLE);
 		bt_next.setVisibility(View.VISIBLE);
+		tvPlayingTime.setVisibility(View.VISIBLE);
+		tvMusicTime.setVisibility(View.VISIBLE);
+		sbMusicSeekbar.setVisibility(View.VISIBLE);
 	}
 	
 	public void progressOn( ) {
@@ -98,7 +119,7 @@ public class ViewForAlternativeFragment extends AbstractViewForFragment{
 	}
 	
 	public void startButtonClicked( ) {
-		btPlayPause.setBackgroundResource(R.drawable.play_btn);
+		btPlayPause.setBackgroundResource(R.drawable.bt_play);
 	}
 	
 	public void pauseButtonClicked( ) {
@@ -150,9 +171,7 @@ public class ViewForAlternativeFragment extends AbstractViewForFragment{
 	public void setSeekBarMax(int aMaxPlayTime) {
 		sbMusicSeekbar.setMax(aMaxPlayTime);
 		
-		int check = (int) (TimeUnit.MILLISECONDS.toSeconds((long) aMaxPlayTime) - 
-	            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
-	            toMinutes((long) aMaxPlayTime)));
+		int check = (int) (TimeUnit.MILLISECONDS.toSeconds((long) aMaxPlayTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) aMaxPlayTime)));
 		
 		if(check < 10)
 			tvMusicTime.setText(String.format("%d:0%d", TimeUnit.MILLISECONDS.toMinutes((long) aMaxPlayTime), check));
@@ -161,16 +180,13 @@ public class ViewForAlternativeFragment extends AbstractViewForFragment{
 	}
 	
 	public void setSeekBarPlayTime(double aStartTime) {
-		int check = (int) (TimeUnit.MILLISECONDS.toSeconds((long) aStartTime) - 
-	            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
-	            toMinutes((long) aStartTime)));
+		int check = (int) (TimeUnit.MILLISECONDS.toSeconds((long) aStartTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) aStartTime)));
 		
 		if(check < 10)
 			tvPlayingTime.setText(String.format("%d:0%d", TimeUnit.MILLISECONDS.toMinutes((long) aStartTime), check));
 		else
 			tvPlayingTime.setText(String.format("%d:%d", TimeUnit.MILLISECONDS.toMinutes((long) aStartTime), check));			
 	}
-	
 	
 	public void setPregressAboutSeekBar(int aCurrentPosition)  {
 		sbMusicSeekbar.setProgress(aCurrentPosition);
@@ -179,6 +195,8 @@ public class ViewForAlternativeFragment extends AbstractViewForFragment{
 	public static interface Controller {
 		public void startPauseMusic( );
 		public void nextMusicStart( );
+		public void clickLike( );
+		public void clickList( );
 		public void seekFromUser(int aProgress);
 	}
 }

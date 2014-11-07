@@ -13,12 +13,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.fatdog.WeatherMusic.MainActivity;
+import com.fatdog.WeatherMusic.R;
 import com.fatdog.WeatherMusic.domain.CoverImage;
 import com.fatdog.WeatherMusic.domain.TrackList;
 import com.fatdog.WeatherMusic.domain.WeatherInfo;
@@ -97,7 +99,8 @@ public class AlternativeFragment extends Fragment implements ViewForAlternativeF
 	@Override
 	public void onDetach( ) {
 		super.onDetach();
-		mMediaPlayer.stop(); // 노래 재생을 아예 중지한다.
+		if(mMediaPlayer.isPlaying())
+			mMediaPlayer.stop(); // 노래 재생을 아예 중지한다.
 	}
 	
 	public void serchRTSPurlFromYouTubeServer( ) { // rtsp프로토콜을 구글에서 가지고 온다.
@@ -316,5 +319,15 @@ public class AlternativeFragment extends Fragment implements ViewForAlternativeF
 		view.pauseButtonClicked();
 		mMediaPlayer.stop();
 		serchRTSPurlFromYouTubeServer( ); // 노래 재생	
+	}
+
+	@Override
+	public void clickLike() {
+		Toast.makeText(getActivity(), R.string.ready_toast, Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void clickList() {
+		Toast.makeText(getActivity(), R.string.ready_toast, Toast.LENGTH_SHORT).show();
 	}
 }

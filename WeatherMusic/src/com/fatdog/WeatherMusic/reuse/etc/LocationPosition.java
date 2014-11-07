@@ -109,6 +109,10 @@ public class LocationPosition {
 		else if(location.equals("서울특별시 관악구")) {
 			nx = 60; ny = 125;			
 		}
+		
+		else {
+			nx = 62; ny = 126;
+		}
 	}
 	
 	public int getNX( ) {

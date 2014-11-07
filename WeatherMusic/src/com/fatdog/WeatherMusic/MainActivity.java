@@ -32,7 +32,6 @@ import com.fatdog.WeatherMusic.reuse.etc.LocationPosition;
 import com.fatdog.WeatherMusic.reuse.network.CurrentWeatherRequest;
 import com.fatdog.WeatherMusic.reuse.network.HttpRequester;
 import com.fatdog.WeatherMusic.ui.genre_alternative.AlternativeFragment;
-import com.fatdog.WeatherMusic.ui.genre_hiphop.HipHopFragment;
 import com.fatdog.WeatherMusic.ui.navigation_drawer_menu.NavigationDrawerFragment;
 import com.naver.wcs.WCSLogEventAPI;
 
@@ -59,9 +58,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	private String skyValue;
 	private String ptyValue;
 	private WeatherInfo weatherInfo;
-	
-	private String userId;
-	private String userName;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,8 +97,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 	transaction.replace(R.id.container, new AlternativeFragment()).commit();
                     break;
                 case 1: 
-                	//transaction.replace(R.id.container, new HipHopFragment()).commit();
-                    //break;
+                case 2:
+                case 3:
+                	transaction.replace(R.id.container, new TempFragment()).commit();
+                    break;
                 default: // etc...
                     break;
             }
@@ -203,7 +201,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		
 		CurrentWeatherRequest currentWeatherRequest = new CurrentWeatherRequest(getApplicationContext());
 		try {
-			currentWeatherRequest.getTodayWeather(getCurrentState, date.getHour(), date.getTodayDate(), aNX, aNY);
+			currentWeatherRequest.getTodayWeather(getCurrentState, "1300", date.getTodayDate(), aNX, aNY);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

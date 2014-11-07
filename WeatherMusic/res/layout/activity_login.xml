@@ -22,14 +22,15 @@
             android:layout_marginTop="350dp"
             android:src="@drawable/weather_music" />
 
-        <com.fatdog.WeatherMusic.reuse.etc.SubmitButton
+        <Button
             android:id="@+id/bt_login_page_login"
             android:layout_width="250dp"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="50dp"
-            android:background="@drawable/loginwithfacebook"
+            android:background="@drawable/bt_sign_in"
+            android:text="Login With Facebook"
             android:textColor="#fff"
             android:textSize="20sp" />
 
@@ -39,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="52dp"
+            android:layout_marginBottom="54dp"
             android:visibility="invisible" />
     </RelativeLayout>
 

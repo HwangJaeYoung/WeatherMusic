@@ -12,5 +12,6 @@
     <string name="night_text"> 깜깜한 밤이 되었다  </string>
     <string name="rain_text"> 비가 온다 주르륵 </string>
     
+    <string name="ready_toast"> 준비 중인 기능입니다. </string>
 	<string name="app_id">714509078625881</string>
 </resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bt_signin_disabled">#dde6f2</color>
+    <color name="bt_signin_default">#2E4589</color>
+    <color name="bt_signin_pressed">#6682B2</color>
+</resources>

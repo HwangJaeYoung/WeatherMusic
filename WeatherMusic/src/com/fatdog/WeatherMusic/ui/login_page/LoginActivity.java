@@ -12,7 +12,6 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 import com.fatdog.WeatherMusic.MainActivity;
-import com.fatdog.WeatherMusic.SplashActivity;
 import com.fatdog.WeatherMusic.reuse.etc.BackPressCloseHandler;
 
 public class LoginActivity extends Activity implements ViewForLoginActivity.Controller  {
@@ -36,6 +35,8 @@ public class LoginActivity extends Activity implements ViewForLoginActivity.Cont
 
 	@Override
 	public void onLogin() {
+		view.lockButton();		
+		
 		Session.openActiveSession(this, true, new Session.StatusCallback() {
 			
 			// callback when session changes state
@@ -49,6 +50,8 @@ public class LoginActivity extends Activity implements ViewForLoginActivity.Cont
 						// object
 						@Override
 						public void onCompleted(GraphUser user, Response response) {
+							view.unLockButton();
+							
 							if (user != null) {
 								Intent intent = new Intent(LoginActivity.this, MainActivity.class); // 로그인 페이지로 이동한다.
 								intent.putExtra("userName", user.getName());

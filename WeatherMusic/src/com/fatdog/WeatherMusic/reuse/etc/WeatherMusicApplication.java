@@ -1,14 +1,11 @@
 package com.fatdog.WeatherMusic.reuse.etc;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
 
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
-
-import com.fatdog.WeatherMusic.R;
 
 public class WeatherMusicApplication extends Application {
 	private MediaPlayer mp; // 공통적인 미디어 플레이어객체 사용
