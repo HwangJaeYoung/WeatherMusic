@@ -21,6 +21,8 @@ public class ViewForHipHopFragment extends AbstractViewForFragment {
 
 	private Button btHipHopPlayPause;
 	private Button btHipHopNext;
+	private Button btHipHopLike;
+	private Button btHipHopList;
 	private TextView tvHipHopTrack;
 	private TextView tvHipHopArtist;
 	private TextView tvHipHopPlayingTime;
@@ -37,13 +39,15 @@ public class ViewForHipHopFragment extends AbstractViewForFragment {
 
 	@Override
 	protected View inflate(LayoutInflater inflater, ViewGroup container) {
-		return inflater.inflate(R.layout.fragment_alternative, container, false);
+		return inflater.inflate(R.layout.fragment_hiphop, container, false);
 	}
 
 	@Override
 	protected void initViews() {
 		btHipHopPlayPause = (Button)findViewById(R.id.bt_hiphop_play_pause);
 		btHipHopNext = (Button)findViewById(R.id.bt_hiphop_next);
+		btHipHopLike = (Button)findViewById(R.id.bt_hiphop_like);
+		btHipHopList = (Button)findViewById(R.id.bt_hiphop_list);
 		tvHipHopTrack = (TextView)findViewById(R.id.tv_hiphop_track);
 		tvHipHopArtist = (TextView)findViewById(R.id.tv_hiphop_artist);
 		sbHipHopMusicSeekbar = (SeekBar)findViewById(R.id.sb_hiphop_music_seekbar);
@@ -83,12 +87,29 @@ public class ViewForHipHopFragment extends AbstractViewForFragment {
 				}
 			}
 		});
+		
+		btHipHopLike.setOnClickListener(new View.OnClickListener() {	
+			@Override
+			public void onClick(View v) {
+				controller.clickLike();			
+			}
+		});
+		
+		btHipHopList.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				controller.clickList();				
+			}
+		});
 	}
 	
 	public void musicLoadingEnd( ) {
 		pbHipHopMusicLoading.setVisibility(View.INVISIBLE);
 		btHipHopPlayPause.setVisibility(View.VISIBLE);
 		btHipHopNext.setVisibility(View.VISIBLE);
+		tvHipHopPlayingTime.setVisibility(View.VISIBLE);
+		tvHipHopMusicTime.setVisibility(View.VISIBLE);
+		sbHipHopMusicSeekbar.setVisibility(View.VISIBLE);
 	}
 	
 	public void progressOn( ) {
@@ -179,6 +200,8 @@ public class ViewForHipHopFragment extends AbstractViewForFragment {
 	public static interface Controller {
 		public void startPauseMusic( );
 		public void nextMusicStart( );
+		public void clickLike( );
+		public void clickList( );
 		public void seekFromUser(int aProgress);
 	}
 }

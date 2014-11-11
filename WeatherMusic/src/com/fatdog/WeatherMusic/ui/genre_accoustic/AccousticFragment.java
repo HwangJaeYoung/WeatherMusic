@@ -1,4 +1,4 @@
-package com.fatdog.WeatherMusic.ui.genre_hiphop;
+package com.fatdog.WeatherMusic.ui.genre_accoustic;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,18 +6,6 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.fatdog.WeatherMusic.MainActivity;
 import com.fatdog.WeatherMusic.R;
@@ -31,9 +19,21 @@ import com.fatdog.WeatherMusic.reuse.network.HttpRequesterForRTSP;
 import com.fatdog.WeatherMusic.reuse.network.LastfmCoverRequest;
 import com.fatdog.WeatherMusic.reuse.network.LastfmRequest;
 import com.fatdog.WeatherMusic.reuse.network.RTSPurlRequest;
+import com.fatdog.WeatherMusic.ui.genre_alternative.ViewForAlternativeFragment;
 
-public class HipHopFragment extends Fragment implements ViewForHipHopFragment.Controller{
-	private ViewForHipHopFragment view;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
+public class AccousticFragment extends Fragment implements ViewForAccousticFragement.Controller {
+	private ViewForAccousticFragement view;
 	private int length;
 	private int musicPlayCount = 0;
 	private boolean firstPlaying = false;
@@ -50,13 +50,13 @@ public class HipHopFragment extends Fragment implements ViewForHipHopFragment.Co
 		super.onCreate(savedInstanceState);
 		WeatherMusicApplication wma = (WeatherMusicApplication)getActivity( ).getApplicationContext();
 		mMediaPlayer = wma.getMediaPlayer();
-		trackInfo = new ArrayList<TrackList>( );	
+		trackInfo = new ArrayList<TrackList>( );		
 	}
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// this는 Controller를 위해서 넣어주는 것이다.
-        view = new ViewForHipHopFragment(getActivity( ), inflater, container, this); // 뷰를 생성해 낸다.
+        view = new ViewForAccousticFragement(getActivity( ), inflater, container, this); // 뷰를 생성해 낸다.
 		
         mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() { // 노래를 다 들었을 경우에
 			@Override
@@ -327,7 +327,7 @@ public class HipHopFragment extends Fragment implements ViewForHipHopFragment.Co
 		mMediaPlayer.stop();
 		serchRTSPurlFromYouTubeServer( ); // 노래 재생	
 	}
-	
+
 	@Override
 	public void clickLike() {
 		Toast.makeText(getActivity(), R.string.ready_toast, Toast.LENGTH_SHORT).show();

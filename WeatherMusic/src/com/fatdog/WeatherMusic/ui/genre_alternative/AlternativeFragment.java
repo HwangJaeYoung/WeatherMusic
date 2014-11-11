@@ -50,32 +50,7 @@ public class AlternativeFragment extends Fragment implements ViewForAlternativeF
 		super.onCreate(savedInstanceState);
 		WeatherMusicApplication wma = (WeatherMusicApplication)getActivity( ).getApplicationContext();
 		mMediaPlayer = wma.getMediaPlayer();
-		trackInfo = new ArrayList<TrackList>( );	
-		
-		mHandlerThread = new HandlerThread("SearchThread"); // 위치추적 통신이 MainActivity에서 끝났는지 확인하기 위한 스레드
-		mHandlerThread.start();
-		musicHandler = new Handler(mHandlerThread.getLooper());
-		musicHandler.post(new Runnable( ) {
-			@Override
-			public void run() {
-				for ( ; ; ) {
-					if (MainActivity.LOCATION_SEARCH_END == 1) { // 위치추적 통신이 끝났으면
-						MainActivity getMainAct = (MainActivity)getActivity( );
-						final WeatherInfo weatherInfo = getMainAct.getWeatherInfo();
-						
-						searchLastFmVidieKey("alternative_folk_rock"); // 노래를 오현 서버에 가서 가지고 온다.
-						
-						mHandler.post(new Runnable() { // 메인 스레드 에서는 기본적인 이미지와 멘트를 추가한다.
-							public void run() {
-								view.setFirstAlbumCover(weatherInfo.weatherInformation());
-								view.setFirstWeatherInfo(weatherInfo.weatherInformation());
-							}
-						});	
-						break;
-					}
-				}
-			}
-		});
+		trackInfo = new ArrayList<TrackList>( );		
 	}
 	
 	@Override
@@ -92,9 +67,41 @@ public class AlternativeFragment extends Fragment implements ViewForAlternativeF
 				serchRTSPurlFromYouTubeServer( ); // 노래를 가지고 온다. 즉 재생한다.	 				
 			}
 		});
-
+        
         return view.getRoot();
     }
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		mHandlerThread = new HandlerThread("SearchThread"); // 위치추적 통신이 MainActivity에서 끝났는지 확인하기 위한 스레드
+		mHandlerThread.start();
+		musicHandler = new Handler(mHandlerThread.getLooper());
+		musicHandler.post(new Runnable( ) {
+			@Override
+			public void run() {
+				for ( ; ; ) {
+					if (MainActivity.LOCATION_SEARCH_END == 1) { // 위치추적 통신이 끝났으면
+						MainActivity getMainAct = (MainActivity)getActivity( );
+						final WeatherInfo weatherInfo = getMainAct.getWeatherInfo();
+						
+						if(weatherInfo != null) {
+							
+							searchLastFmVidieKey("alternative_folk_rock"); // 노래를 오현 서버에 가서 가지고 온다.
+							
+							mHandler.post(new Runnable() { // 메인 스레드 에서는 기본적인 이미지와 멘트를 추가한다.
+								public void run() {
+									view.setFirstAlbumCover(weatherInfo.weatherInformation());
+									view.setFirstWeatherInfo(weatherInfo.weatherInformation());
+								}
+							});
+							break;
+						}
+					}
+				}
+			}
+		});
+	}
 	
 	@Override
 	public void onDetach( ) {

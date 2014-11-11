@@ -2,7 +2,9 @@ package com.fatdog.WeatherMusic.ui.login_page;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -13,10 +15,13 @@ import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 import com.fatdog.WeatherMusic.MainActivity;
 import com.fatdog.WeatherMusic.reuse.etc.BackPressCloseHandler;
+import com.fatdog.WeatherMusic.reuse.etc.WeatherMusicApplication;
+import com.fatdog.WeatherMusic.reuse.favor_genre_page.FavorGenreActivity;
 
 public class LoginActivity extends Activity implements ViewForLoginActivity.Controller  {
 	private ViewForLoginActivity view;
 	private BackPressCloseHandler backPressCloseHandler;
+	private SharedPreferences prefs; // 첫 화면 로딩
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +30,9 @@ public class LoginActivity extends Activity implements ViewForLoginActivity.Cont
 		super.onCreate(savedInstanceState);
 		backPressCloseHandler = new BackPressCloseHandler(this);
 		view = new ViewForLoginActivity(getApplicationContext(), this); // 뷰를 생성해 낸다.
+		
+		prefs = PreferenceManager.getDefaultSharedPreferences(getApplication()); // 프레퍼런스 초기화
+		
 		setContentView(view.getRoot());
 	}
 	
@@ -53,9 +61,19 @@ public class LoginActivity extends Activity implements ViewForLoginActivity.Cont
 							view.unLockButton();
 							
 							if (user != null) {
-								Intent intent = new Intent(LoginActivity.this, MainActivity.class); // 로그인 페이지로 이동한다.
-								intent.putExtra("userName", user.getName());
-								intent.putExtra("userId", user.getId());
+								
+								WeatherMusicApplication wma = (WeatherMusicApplication)getApplicationContext();
+								wma.setUserId(user.getId());
+								wma.setUserName(user.getName());
+								
+								Intent intent = null;
+								Boolean check = prefs.getBoolean("favorGenre", false); // false이면 처음에 설치한 사람이다.
+								
+								if(check == false)
+									intent = new Intent(LoginActivity.this, FavorGenreActivity.class); // 선호장르 페이지로 이동한다.
+								else
+									intent = new Intent(LoginActivity.this, MainActivity.class); // 그냥 메인으로 이동한다.
+								
 								startActivity(intent);
 								finish();
 							}

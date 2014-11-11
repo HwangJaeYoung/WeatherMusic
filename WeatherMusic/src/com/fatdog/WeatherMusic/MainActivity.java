@@ -31,7 +31,10 @@ import com.fatdog.WeatherMusic.reuse.etc.DateCalculation;
 import com.fatdog.WeatherMusic.reuse.etc.LocationPosition;
 import com.fatdog.WeatherMusic.reuse.network.CurrentWeatherRequest;
 import com.fatdog.WeatherMusic.reuse.network.HttpRequester;
+import com.fatdog.WeatherMusic.ui.genre_accoustic.AccousticFragment;
 import com.fatdog.WeatherMusic.ui.genre_alternative.AlternativeFragment;
+import com.fatdog.WeatherMusic.ui.genre_hiphop.HipHopFragment;
+import com.fatdog.WeatherMusic.ui.genre_rnb.RNBFragment;
 import com.fatdog.WeatherMusic.ui.navigation_drawer_menu.NavigationDrawerFragment;
 import com.naver.wcs.WCSLogEventAPI;
 
@@ -75,14 +78,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
 		mNavigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager( ).findFragmentById(R.id.navigation_drawer);
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout)findViewById(R.id.drawer_layout));
-	}
-	
-	@Override
-	protected void onResume( ) {
-		super.onResume();
+		
 		defineLocation( ); // 위치 추적의 시작		
 	}
-	
+
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
         int previousMenuIndex = currentMenuIndex;
@@ -90,6 +89,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         if(currentMenuIndex != previousMenuIndex) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
+
             switch (position) {
             	// add는 기존의 것을 그대로 놔두며 추가하고, replace는 기존의 것을 제거하고 추가한다.
             	// 동적으로 프래그먼트를 정의하며, 레이아웃에 추가 될 때 라이프사이클을 돈다.
@@ -97,9 +97,13 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 	transaction.replace(R.id.container, new AlternativeFragment()).commit();
                     break;
                 case 1: 
+                	transaction.replace(R.id.container, new HipHopFragment()).commit();
+                    break;
                 case 2:
+                	transaction.replace(R.id.container, new AccousticFragment()).commit();
+                    break;
                 case 3:
-                	transaction.replace(R.id.container, new TempFragment()).commit();
+                	transaction.replace(R.id.container, new RNBFragment()).commit();
                     break;
                 default: // etc...
                     break;
@@ -201,7 +205,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		
 		CurrentWeatherRequest currentWeatherRequest = new CurrentWeatherRequest(getApplicationContext());
 		try {
-			currentWeatherRequest.getTodayWeather(getCurrentState, "1300", date.getTodayDate(), aNX, aNY);
+			currentWeatherRequest.getTodayWeather(getCurrentState, date.getHour(), date.getTodayDate(), aNX, aNY);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -238,12 +242,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 			if(skyValue == null)
 				ptyValue = "1"; // 맑음 디폴트
 			
-			if(ptyValue == null) // 
+			if(ptyValue == null)
 				ptyValue = "0";
 			
 			DateCalculation date = new DateCalculation();
 			weatherInfo = new WeatherInfo(skyValue, ptyValue, date.getHour()); // 도메인 생성한다.
-			
+
 			LOCATION_SEARCH_END = 1; // 위치추적 통신이 끝났다는 것을 프래그먼트에게 알려준다.	
 		}
 		

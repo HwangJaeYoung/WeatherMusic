@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/bt_favor_page_alternative"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:text="Alternative"
+        android:textColor="#fff"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/bt_favor_page_hiphop"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:text="HipHop"
+        android:textColor="#fff"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/bt_favor_page_accoustic"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:text="Accoustic"
+        android:textColor="#fff"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/bt_favor_page_rnb"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:text="R and B"
+        android:textColor="#fff"
+        android:textSize="20sp" />
+
+</LinearLayout>
