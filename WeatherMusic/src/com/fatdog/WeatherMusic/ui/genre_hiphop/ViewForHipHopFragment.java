@@ -19,7 +19,6 @@ import com.fatdog.WeatherMusic.reuse.mvc.fragement.AbstractViewForFragment;
 
 public class ViewForHipHopFragment extends AbstractViewForFragment {
 
-	private Button btHipHopPlayPause;
 	private Button btHipHopNext;
 	private Button btHipHopLike;
 	private Button btHipHopList;
@@ -30,6 +29,7 @@ public class ViewForHipHopFragment extends AbstractViewForFragment {
 	private SeekBar sbHipHopMusicSeekbar;
 	private Controller controller;
 	private CircularImageView ivHipHopAlbumCover;
+	private CircularImageView ivAlbumCoverHiphopArrow;
 	private ProgressBar pbHipHopMusicLoading;
 	
 	public ViewForHipHopFragment(Context context,LayoutInflater layoutInflater, ViewGroup container, Controller aController) {
@@ -44,7 +44,6 @@ public class ViewForHipHopFragment extends AbstractViewForFragment {
 
 	@Override
 	protected void initViews() {
-		btHipHopPlayPause = (Button)findViewById(R.id.bt_hiphop_play_pause);
 		btHipHopNext = (Button)findViewById(R.id.bt_hiphop_next);
 		btHipHopLike = (Button)findViewById(R.id.bt_hiphop_like);
 		btHipHopList = (Button)findViewById(R.id.bt_hiphop_list);
@@ -55,11 +54,13 @@ public class ViewForHipHopFragment extends AbstractViewForFragment {
 		tvHipHopPlayingTime = (TextView)findViewById(R.id.tv_hiphop_playing_time);
 		tvHipHopMusicTime = (TextView)findViewById(R.id.tv_hiphop_music_time);
 		pbHipHopMusicLoading = (ProgressBar)findViewById(R.id.pb_hiphop_music_loading);
+		
+		ivAlbumCoverHiphopArrow = (CircularImageView)findViewById(R.id.iv_album_cover_hiphop_arrow);
 	}
 
 	@Override
 	protected void setEvents() {
-		btHipHopPlayPause.setOnClickListener(new View.OnClickListener() {
+		ivHipHopAlbumCover.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				controller.startPauseMusic();
@@ -105,29 +106,26 @@ public class ViewForHipHopFragment extends AbstractViewForFragment {
 	
 	public void musicLoadingEnd( ) {
 		pbHipHopMusicLoading.setVisibility(View.INVISIBLE);
-		btHipHopPlayPause.setVisibility(View.VISIBLE);
-		btHipHopNext.setVisibility(View.VISIBLE);
-		tvHipHopPlayingTime.setVisibility(View.VISIBLE);
-		tvHipHopMusicTime.setVisibility(View.VISIBLE);
 		sbHipHopMusicSeekbar.setVisibility(View.VISIBLE);
 	}
 	
 	public void progressOn( ) {
 		pbHipHopMusicLoading.setVisibility(View.VISIBLE);
-		btHipHopPlayPause.setVisibility(View.INVISIBLE);
 		btHipHopNext.setVisibility(View.INVISIBLE);
 	}
 	
 	public void startButtonClicked( ) {
-		btHipHopPlayPause.setBackgroundResource(R.drawable.play_btn);
+		btHipHopNext.setVisibility(View.VISIBLE);
+		ivAlbumCoverHiphopArrow.setVisibility(View.INVISIBLE);
 	}
 	
 	public void pauseButtonClicked( ) {
-		btHipHopPlayPause.setBackgroundResource(R.drawable.pause_btn);
+		ivAlbumCoverHiphopArrow.setVisibility(View.VISIBLE);
 	}
 	
 	public void setMusicTitle(String aTitle) {
 		tvHipHopTrack.setText(aTitle);
+		tvHipHopTrack.setSelected(true);
 	}
 	
 	public void setMusicArtist(String anArtist) {
@@ -136,6 +134,10 @@ public class ViewForHipHopFragment extends AbstractViewForFragment {
 	
 	public void setAlbumCover(CoverImage anImage) {
 		ivHipHopAlbumCover.setImageUrl(anImage.getCoverURL());
+	}
+	
+	public void nextButtonClicked( ) {
+		btHipHopNext.setVisibility(View.VISIBLE);
 	}
 	
 	public void setFirstAlbumCover(String aWeatherInfo) {

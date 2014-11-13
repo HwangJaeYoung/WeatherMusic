@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -29,6 +30,7 @@ import com.fatdog.WeatherMusic.domain.WeatherInfo;
 import com.fatdog.WeatherMusic.reuse.etc.BackPressCloseHandler;
 import com.fatdog.WeatherMusic.reuse.etc.DateCalculation;
 import com.fatdog.WeatherMusic.reuse.etc.LocationPosition;
+import com.fatdog.WeatherMusic.reuse.favor_genre_page.FavorGenreActivity;
 import com.fatdog.WeatherMusic.reuse.network.CurrentWeatherRequest;
 import com.fatdog.WeatherMusic.reuse.network.HttpRequester;
 import com.fatdog.WeatherMusic.ui.genre_accoustic.AccousticFragment;
@@ -205,7 +207,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		
 		CurrentWeatherRequest currentWeatherRequest = new CurrentWeatherRequest(getApplicationContext());
 		try {
-			currentWeatherRequest.getTodayWeather(getCurrentState, date.getHour(), date.getTodayDate(), aNX, aNY);
+			currentWeatherRequest.getTodayWeather(getCurrentState, "1600", date.getTodayDate(), aNX, aNY);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -264,5 +266,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	@Override
 	public void onBackPressed() {
 		backPressCloseHandler.onBackPressed();
+	}
+
+	@Override
+	public void settingClick() {
+		Intent intent = new Intent(MainActivity.this, FavorGenreActivity.class);
+		startActivity(intent);
 	}
 }

@@ -18,7 +18,6 @@ import com.fatdog.WeatherMusic.reuse.etc.CircularImageView;
 import com.fatdog.WeatherMusic.reuse.mvc.fragement.AbstractViewForFragment;
 
 public class ViewForRNBFragment  extends AbstractViewForFragment {
-	private Button btRNBPlayPause;
 	private Button btRNBNext;
 	private Button btRNBLike;
 	private Button btRNBList;
@@ -29,6 +28,7 @@ public class ViewForRNBFragment  extends AbstractViewForFragment {
 	private SeekBar sbRNBMusicSeekbar;
 	private Controller controller;
 	private CircularImageView ivRNBAlbumCover;
+	private CircularImageView ivAlbumCoverRnbArrow;
 	private ProgressBar pbRNBMusicLoading;
 	
 	public ViewForRNBFragment(Context context,LayoutInflater layoutInflater, ViewGroup container, Controller aController) {
@@ -43,7 +43,6 @@ public class ViewForRNBFragment  extends AbstractViewForFragment {
 
 	@Override
 	protected void initViews() {
-		btRNBPlayPause = (Button)findViewById(R.id.bt_rnb_play_pause);
 		btRNBNext = (Button)findViewById(R.id.bt_rnb_next);
 		tvRNBTrack = (TextView)findViewById(R.id.tv_rnb_track);
 		tvRNBArtist = (TextView)findViewById(R.id.tv_rnb_artist);
@@ -54,11 +53,12 @@ public class ViewForRNBFragment  extends AbstractViewForFragment {
 		pbRNBMusicLoading = (ProgressBar)findViewById(R.id.pb_rnb_music_loading);
 		btRNBLike= (Button)findViewById(R.id.bt_rnb_like);
 		btRNBList = (Button)findViewById(R.id.bt_rnb_list);
+		ivAlbumCoverRnbArrow = (CircularImageView)findViewById(R.id.iv_album_cover_rnb_arrow);
 	}
 
 	@Override
 	protected void setEvents() {
-		btRNBPlayPause.setOnClickListener(new View.OnClickListener() {
+		ivRNBAlbumCover.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				controller.startPauseMusic();
@@ -104,29 +104,30 @@ public class ViewForRNBFragment  extends AbstractViewForFragment {
 	
 	public void musicLoadingEnd( ) {
 		pbRNBMusicLoading.setVisibility(View.INVISIBLE);
-		btRNBPlayPause.setVisibility(View.VISIBLE);
-		btRNBNext.setVisibility(View.VISIBLE);
-		tvRNBPlayingTime.setVisibility(View.VISIBLE);
-		tvRNBMusicTime.setVisibility(View.VISIBLE);
 		sbRNBMusicSeekbar.setVisibility(View.VISIBLE);
 	}
 	
 	public void progressOn( ) {
 		pbRNBMusicLoading.setVisibility(View.VISIBLE);
-		btRNBPlayPause.setVisibility(View.INVISIBLE);
 		btRNBNext.setVisibility(View.INVISIBLE);
 	}
 	
 	public void startButtonClicked( ) {
-		btRNBPlayPause.setBackgroundResource(R.drawable.bt_play);
+		btRNBNext.setVisibility(View.VISIBLE);
+		ivAlbumCoverRnbArrow.setVisibility(View.INVISIBLE);
 	}
 	
 	public void pauseButtonClicked( ) {
-		btRNBPlayPause.setBackgroundResource(R.drawable.pause_btn);
+		ivAlbumCoverRnbArrow.setVisibility(View.VISIBLE);
+	}
+	
+	public void nextButtonClicked( ) {
+		btRNBNext.setVisibility(View.VISIBLE);
 	}
 	
 	public void setMusicTitle(String aTitle) {
 		tvRNBTrack.setText(aTitle);
+		tvRNBTrack.setSelected(true);
 	}
 	
 	public void setMusicArtist(String anArtist) {

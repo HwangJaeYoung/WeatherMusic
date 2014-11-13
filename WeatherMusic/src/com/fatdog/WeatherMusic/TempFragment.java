@@ -1,16 +1,6 @@
 package com.fatdog.WeatherMusic;
 
-import java.util.ArrayList;
-
-import com.fatdog.WeatherMusic.domain.TrackList;
-import com.fatdog.WeatherMusic.domain.WeatherInfo;
-import com.fatdog.WeatherMusic.reuse.etc.WeatherMusicApplication;
-import com.fatdog.WeatherMusic.ui.genre_alternative.ViewForAlternativeFragment;
-
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;

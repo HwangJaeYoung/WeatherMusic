@@ -11,7 +11,6 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.view.View.MeasureSpec;
 
 import com.fatdog.WeatherMusic.R;
 import com.loopj.android.image.SmartImageView;
@@ -47,7 +46,7 @@ public class CircularImageView extends SmartImageView {
 		if(attributes.getBoolean(R.styleable.CircularImageView_border, true)) {
 			int defaultBorderSize = (int) (4 * getContext().getResources().getDisplayMetrics().density + 0.5f);
 			setBorderWidth(attributes.getDimensionPixelOffset(R.styleable.CircularImageView_border_width, defaultBorderSize));
-			setBorderColor(attributes.getColor(R.styleable.CircularImageView_border_color, Color.WHITE));
+			setBorderColor(attributes.getColor(R.styleable.CircularImageView_border_color, Color.TRANSPARENT));
 		}
 
 		if(attributes.getBoolean(R.styleable.CircularImageView_shadow, false))

@@ -16,10 +16,9 @@ import com.fatdog.WeatherMusic.R;
 import com.fatdog.WeatherMusic.domain.CoverImage;
 import com.fatdog.WeatherMusic.reuse.etc.CircularImageView;
 import com.fatdog.WeatherMusic.reuse.mvc.fragement.AbstractViewForFragment;
-import com.fatdog.WeatherMusic.ui.genre_alternative.ViewForAlternativeFragment.Controller;
 
 public class ViewForAccousticFragement extends AbstractViewForFragment {
-	private Button btAccouPlayPause;
+
 	private Button btAccouNext;
 	private Button btAccouLike;
 	private Button btAccouList;
@@ -30,6 +29,7 @@ public class ViewForAccousticFragement extends AbstractViewForFragment {
 	private SeekBar sbAccouMusicSeekbar;
 	private Controller controller;
 	private CircularImageView ivAccouAlbumCover;
+	private CircularImageView ivAlbumCoverAccuArrow;
 	private ProgressBar pbAccouMusicLoading;
 	
 	public ViewForAccousticFragement(Context context,LayoutInflater layoutInflater, ViewGroup container, Controller aController) {
@@ -44,7 +44,6 @@ public class ViewForAccousticFragement extends AbstractViewForFragment {
 
 	@Override
 	protected void initViews() {
-		btAccouPlayPause = (Button)findViewById(R.id.bt_accu_play_pause);
 		btAccouNext = (Button)findViewById(R.id.bt_accu_next);
 		tvAccouTrack = (TextView)findViewById(R.id.tv_accu_track);
 		tvAccouArtist = (TextView)findViewById(R.id.tv_accu_artist);
@@ -55,11 +54,13 @@ public class ViewForAccousticFragement extends AbstractViewForFragment {
 		pbAccouMusicLoading = (ProgressBar)findViewById(R.id.pb_accu_music_loading);
 		btAccouLike= (Button)findViewById(R.id.bt_accu_like);
 		btAccouList = (Button)findViewById(R.id.bt_accu_list);
+		ivAlbumCoverAccuArrow = (CircularImageView)findViewById(R.id.iv_album_cover_accu_arrow);
+		
 	}
 
 	@Override
 	protected void setEvents() {
-		btAccouPlayPause.setOnClickListener(new View.OnClickListener() {
+		ivAccouAlbumCover.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				controller.startPauseMusic();
@@ -105,29 +106,30 @@ public class ViewForAccousticFragement extends AbstractViewForFragment {
 	
 	public void musicLoadingEnd( ) {
 		pbAccouMusicLoading.setVisibility(View.INVISIBLE);
-		btAccouPlayPause.setVisibility(View.VISIBLE);
-		btAccouNext.setVisibility(View.VISIBLE);
-		tvAccouPlayingTime.setVisibility(View.VISIBLE);
-		tvAccouMusicTime.setVisibility(View.VISIBLE);
 		sbAccouMusicSeekbar.setVisibility(View.VISIBLE);
 	}
 	
 	public void progressOn( ) {
 		pbAccouMusicLoading.setVisibility(View.VISIBLE);
-		btAccouPlayPause.setVisibility(View.INVISIBLE);
 		btAccouNext.setVisibility(View.INVISIBLE);
 	}
 	
 	public void startButtonClicked( ) {
-		btAccouPlayPause.setBackgroundResource(R.drawable.bt_play);
+		btAccouNext.setVisibility(View.VISIBLE);
+		ivAlbumCoverAccuArrow.setVisibility(View.INVISIBLE);
 	}
 	
 	public void pauseButtonClicked( ) {
-		btAccouPlayPause.setBackgroundResource(R.drawable.pause_btn);
+		ivAlbumCoverAccuArrow.setVisibility(View.VISIBLE);
 	}
 	
 	public void setMusicTitle(String aTitle) {
 		tvAccouTrack.setText(aTitle);
+		tvAccouTrack.setSelected(true);
+	}
+	
+	public void nextButtonClicked( ) {
+		btAccouNext.setVisibility(View.VISIBLE);
 	}
 	
 	public void setMusicArtist(String anArtist) {

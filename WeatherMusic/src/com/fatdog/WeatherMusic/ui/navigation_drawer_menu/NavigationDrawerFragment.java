@@ -1,13 +1,8 @@
 package com.fatdog.WeatherMusic.ui.navigation_drawer_menu;
 
-import java.io.InputStream;
-import java.net.URL;
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -17,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -47,6 +42,8 @@ public class NavigationDrawerFragment extends Fragment {
 	
 	private Boolean firstChoice = true;
 	private SharedPreferences prefs; // 첫 화면 로딩
+	
+	private ImageView ivNavigationDrawerMenuSetting;
 
 	
 	public NavigationDrawerFragment() { }
@@ -101,7 +98,16 @@ public class NavigationDrawerFragment extends Fragment {
 		WeatherMusicApplication wma = (WeatherMusicApplication)getActivity( ).getApplicationContext();
 		
 		profilePicture.setProfileId(wma.getUserId());
-		tvNavigationDrawerMenuUser.setText(wma.getUserName());		
+		tvNavigationDrawerMenuUser.setText(wma.getUserName());	
+		
+		ivNavigationDrawerMenuSetting = (ImageView)root.findViewById(R.id.iv_navigation_drawer_menu_setting);
+		
+		ivNavigationDrawerMenuSetting.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mCallbacks.settingClick();
+			}
+		});
 		
 		return root;
 	}
@@ -219,5 +225,6 @@ public class NavigationDrawerFragment extends Fragment {
 	public static interface NavigationDrawerCallbacks {
 		// 네비게이션 드로워의 항목이 선택되었을 때 호출 되는 메소드
 		void onNavigationDrawerItemSelected(int position);
+		public void settingClick( );
 	}
 }

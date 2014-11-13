@@ -11,6 +11,7 @@ import com.fatdog.WeatherMusic.reuse.listview.mvc.IListViewItem;
 public class ViewForNavigationDrawerMenuListViewItem extends AbstractViewForListViewItem {
 	private ImageView ivListItem; 
 
+
 	public ViewForNavigationDrawerMenuListViewItem(Context context) {
 		super(context);
 	}
@@ -23,10 +24,13 @@ public class ViewForNavigationDrawerMenuListViewItem extends AbstractViewForList
 	@Override
 	protected void initViews() {
 		ivListItem = (ImageView)findViewById(R.id.iv_list_item);
+		
 	}
 
 	@Override
-	protected void setEvents() { }
+	protected void setEvents() { 
+
+	}
 
 	@Override
 	protected void setData(IListViewItem aIListViewItem) {

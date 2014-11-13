@@ -19,7 +19,6 @@ import com.fatdog.WeatherMusic.reuse.mvc.fragement.AbstractViewForFragment;
 
 public class ViewForAlternativeFragment extends AbstractViewForFragment {
 	
-	private Button btPlayPause;
 	private Button bt_next;
 	private Button btLike;
 	private Button btList;
@@ -30,6 +29,7 @@ public class ViewForAlternativeFragment extends AbstractViewForFragment {
 	private SeekBar sbMusicSeekbar;
 	private Controller controller;
 	private CircularImageView ivAlbumCover;
+	private CircularImageView ivAlbumCoverListener;
 	private ProgressBar pbMusicLoading;
 	
 	public ViewForAlternativeFragment(Context context,LayoutInflater layoutInflater, ViewGroup container, Controller aController) {
@@ -44,7 +44,6 @@ public class ViewForAlternativeFragment extends AbstractViewForFragment {
 
 	@Override
 	protected void initViews() {
-		btPlayPause = (Button)findViewById(R.id.bt_play_pause);
 		bt_next = (Button)findViewById(R.id.bt_next);
 		tvTrack = (TextView)findViewById(R.id.tv_track);
 		tvArtist = (TextView)findViewById(R.id.tv_artist);
@@ -55,11 +54,12 @@ public class ViewForAlternativeFragment extends AbstractViewForFragment {
 		pbMusicLoading = (ProgressBar)findViewById(R.id.pb_music_loading);
 		btLike= (Button)findViewById(R.id.bt_like);
 		btList = (Button)findViewById(R.id.bt_list);
+		ivAlbumCoverListener = (CircularImageView)findViewById(R.id.iv_album_cover_listener);
 	}
 
 	@Override
 	protected void setEvents() {
-		btPlayPause.setOnClickListener(new View.OnClickListener() {
+		ivAlbumCover.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				controller.startPauseMusic();
@@ -105,29 +105,30 @@ public class ViewForAlternativeFragment extends AbstractViewForFragment {
 	
 	public void musicLoadingEnd( ) {
 		pbMusicLoading.setVisibility(View.INVISIBLE);
-		btPlayPause.setVisibility(View.VISIBLE);
-		bt_next.setVisibility(View.VISIBLE);
-		tvPlayingTime.setVisibility(View.VISIBLE);
-		tvMusicTime.setVisibility(View.VISIBLE);
 		sbMusicSeekbar.setVisibility(View.VISIBLE);
 	}
 	
 	public void progressOn( ) {
 		pbMusicLoading.setVisibility(View.VISIBLE);
-		btPlayPause.setVisibility(View.INVISIBLE);
 		bt_next.setVisibility(View.INVISIBLE);
 	}
 	
 	public void startButtonClicked( ) {
-		btPlayPause.setBackgroundResource(R.drawable.bt_play);
+		bt_next.setVisibility(View.VISIBLE); 
+		ivAlbumCoverListener.setVisibility(View.INVISIBLE);
 	}
 	
 	public void pauseButtonClicked( ) {
-		btPlayPause.setBackgroundResource(R.drawable.pause_btn);
+		ivAlbumCoverListener.setVisibility(View.VISIBLE);
+	}
+	
+	public void nextButtonClicked( ) { // 노래 목록을 불러온 다음에 버튼을 보여주기 위해서 설정하였다.
+		bt_next.setVisibility(View.VISIBLE);
 	}
 	
 	public void setMusicTitle(String aTitle) {
 		tvTrack.setText(aTitle);
+		tvTrack.setSelected(true); // 말퀴 먹일려고 사용함
 	}
 	
 	public void setMusicArtist(String anArtist) {
@@ -136,6 +137,16 @@ public class ViewForAlternativeFragment extends AbstractViewForFragment {
 	
 	public void setAlbumCover(CoverImage anImage) {
 		ivAlbumCover.setImageUrl(anImage.getCoverURL());
+	}
+	
+	public void setTextViewInvisible( ) { // 노래 불러올 때 나머지 텍스트를 보이지 않게한다.
+		tvArtist.setVisibility(View.INVISIBLE);
+		tvTrack.setVisibility(View.INVISIBLE);
+	}
+	
+	public void setTextViewVisible() { // 노래 불러올 때 나머지 텍스트를 보이게 한다.
+		tvArtist.setVisibility(View.VISIBLE);
+		tvTrack.setVisibility(View.VISIBLE);
 	}
 	
 	public void setFirstAlbumCover(String aWeatherInfo) {

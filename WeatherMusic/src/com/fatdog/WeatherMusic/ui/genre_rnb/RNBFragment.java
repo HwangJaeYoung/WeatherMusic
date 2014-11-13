@@ -19,7 +19,6 @@ import com.fatdog.WeatherMusic.reuse.network.HttpRequesterForRTSP;
 import com.fatdog.WeatherMusic.reuse.network.LastfmCoverRequest;
 import com.fatdog.WeatherMusic.reuse.network.LastfmRequest;
 import com.fatdog.WeatherMusic.reuse.network.RTSPurlRequest;
-import com.fatdog.WeatherMusic.ui.genre_hiphop.ViewForHipHopFragment;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -27,7 +26,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +43,8 @@ public class RNBFragment extends Fragment implements ViewForRNBFragment.Controll
 	private Handler musicHandler;
 	private Handler mHandler = new Handler( );
 	private HandlerThread mHandlerThread;
+	
+	private String weatherString = null; // 맑음, 흐림 같은 날씨 정보를 들고 있다.
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -92,8 +92,9 @@ public class RNBFragment extends Fragment implements ViewForRNBFragment.Controll
 							
 							mHandler.post(new Runnable() { // 메인 스레드 에서는 기본적인 이미지와 멘트를 추가한다.
 								public void run() {
-									view.setFirstAlbumCover(weatherInfo.weatherInformation());
-									view.setFirstWeatherInfo(weatherInfo.weatherInformation());
+									weatherString = weatherInfo.weatherInformation();
+									view.setFirstAlbumCover(weatherString);
+									view.setFirstWeatherInfo(weatherString);
 								}
 							});
 							break;
@@ -221,6 +222,8 @@ public class RNBFragment extends Fragment implements ViewForRNBFragment.Controll
 			});	
 			
 			if(reloadingFlag == true) { // 다시 노래 목록을 가지고 온거라면
+				view.musicLoadingEnd( ); // 다시 프로그레스 바를 돌린다 가져올 때 까지
+				view.nextButtonClicked( ); // 다음재생 버튼을 활성화 시킨다.
 				reloadingFlag = false; // 플레그를 초기화 시켜주고
 				serchRTSPurlFromYouTubeServer( ); // 다시 통신을 시작한다. 시작시키기 위해서 
 			}
@@ -306,25 +309,25 @@ public class RNBFragment extends Fragment implements ViewForRNBFragment.Controll
 	public void startPauseMusic() {
 		if (firstPlaying == false) {
 			serchRTSPurlFromYouTubeServer(); // 처음에는 노래를 가지고 온다.
-			view.pauseButtonClicked();
+			view.startButtonClicked();
 			firstPlaying = true; // 들었으므로 플래그 변환
 		} else {
 			if (mMediaPlayer.isPlaying()) { // 노래를 듣고 있다. 즉 노래를 멈추기 위해
 				length = mMediaPlayer.getCurrentPosition(); // 듣고 있었떤 위치의 저장
 				mMediaPlayer.pause(); // 노래 일시정지
-				view.startButtonClicked(); 
+				view.pauseButtonClicked(); 
 			} else { // 노래 재생
 
 				mMediaPlayer.seekTo(length); // 듣고 있었던 위치를 재생한다.
 				mMediaPlayer.start(); // 노래를 시작한다.
-				view.pauseButtonClicked();
+				view.startButtonClicked();
 			}
 		}
 	}
 
 	@Override
 	public void nextMusicStart() { // 다음 노래 버튼을 클릭하였을 때
-		view.pauseButtonClicked();
+		view.startButtonClicked();
 		mMediaPlayer.stop();
 		serchRTSPurlFromYouTubeServer( ); // 노래 재생	
 	}
@@ -332,12 +335,10 @@ public class RNBFragment extends Fragment implements ViewForRNBFragment.Controll
 	@Override
 	public void clickLike() {
 		Toast.makeText(getActivity(), R.string.ready_toast, Toast.LENGTH_SHORT).show();
-		
 	}
 
 	@Override
 	public void clickList() {
 		Toast.makeText(getActivity(), R.string.ready_toast, Toast.LENGTH_SHORT).show();
-		
 	}
 }
