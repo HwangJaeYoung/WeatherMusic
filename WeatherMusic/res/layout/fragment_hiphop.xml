@@ -103,7 +103,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="25dp"
         android:progressDrawable="@drawable/seekbar_progress"
-        android:thumb="@drawable/circle_thumb" />
+        android:thumb="@drawable/circle_thumb"
+        android:visibility="invisible" />
 
     <Button
         android:id="@+id/bt_hiphop_like"

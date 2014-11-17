@@ -68,10 +68,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		wcsContext = this;
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 		backPressCloseHandler = new BackPressCloseHandler(this);
 		setContentView(R.layout.activity_main);
-		
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		coder = new Geocoder(MainActivity.this);
 		
 		// 네이버 애널리틱스의 시작
@@ -80,7 +80,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
 		mNavigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager( ).findFragmentById(R.id.navigation_drawer);
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout)findViewById(R.id.drawer_layout));
-		
+
 		defineLocation( ); // 위치 추적의 시작		
 	}
 
@@ -157,7 +157,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		try {
 			list = coder.getFromLocation(lattitude, longitude, 6);
 		} catch (IOException e) {
-			Log.i("js", "error");
 			e.printStackTrace();
 		}
 
@@ -170,9 +169,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 					break;
 			}
 		}
-
 		finalLocation = si + " " + gu; // 최종적인 현재의 위치정보
+		Log.i("temp",finalLocation);
 		
+		locationManager.removeUpdates(networkListener); // 위치추적을 해제한다.
+	     
 		if(finalLocation == null) { // 위치정보를 못 가지고 왔을 시에
 			showSettingsAlert( );	
 		} else {
@@ -207,7 +208,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		
 		CurrentWeatherRequest currentWeatherRequest = new CurrentWeatherRequest(getApplicationContext());
 		try {
-			currentWeatherRequest.getTodayWeather(getCurrentState, "1600", date.getTodayDate(), aNX, aNY);
+			Log.i("temp", date.getHour());
+			currentWeatherRequest.getTodayWeather(getCurrentState, date.getHour(), date.getTodayDate(), aNX, aNY);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

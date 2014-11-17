@@ -111,6 +111,7 @@ public class ViewForAccousticFragement extends AbstractViewForFragment {
 	
 	public void progressOn( ) {
 		pbAccouMusicLoading.setVisibility(View.VISIBLE);
+		sbAccouMusicSeekbar.setVisibility(View.INVISIBLE);
 		btAccouNext.setVisibility(View.INVISIBLE);
 	}
 	
@@ -138,6 +139,24 @@ public class ViewForAccousticFragement extends AbstractViewForFragment {
 	
 	public void setAlbumCover(CoverImage anImage) {
 		ivAccouAlbumCover.setImageUrl(anImage.getCoverURL());
+	}
+	
+	public void setTextViewInvisible( ) { // 노래 불러올 때 나머지 텍스트를 보이지 않게한다.
+		tvAccouArtist.setVisibility(View.INVISIBLE);
+		tvAccouTrack.setVisibility(View.INVISIBLE);
+	}
+	
+	public void setTextViewVisible() { // 노래 불러올 때 나머지 텍스트를 보이게 한다.
+		tvAccouArtist.setVisibility(View.VISIBLE);
+		tvAccouTrack.setVisibility(View.VISIBLE);
+	}
+	
+	public void nextButtonPregressBarOn( ) {
+		pbAccouMusicLoading.setVisibility(View.VISIBLE);
+	}
+	
+	public void nextButtonPregressBarOff( ) {
+		pbAccouMusicLoading.setVisibility(View.INVISIBLE);
 	}
 	
 	public void setFirstAlbumCover(String aWeatherInfo) {

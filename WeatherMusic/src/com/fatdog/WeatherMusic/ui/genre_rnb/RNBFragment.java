@@ -75,7 +75,7 @@ public class RNBFragment extends Fragment implements ViewForRNBFragment.Controll
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		mHandlerThread = new HandlerThread("SearchThread"); // 위치추적 통신이 MainActivity에서 끝났는지 확인하기 위한 스레드
+		mHandlerThread = new HandlerThread("SearchThread4"); // 위치추적 통신이 MainActivity에서 끝났는지 확인하기 위한 스레드
 		mHandlerThread.start();
 		musicHandler = new Handler(mHandlerThread.getLooper());
 		musicHandler.post(new Runnable( ) {
@@ -117,6 +117,7 @@ public class RNBFragment extends Fragment implements ViewForRNBFragment.Controll
 		if(musicPlayCount == 10) { // 노래 목록을 모두 사용했을 경우
 			musicPlayCount = 0; // 노래 재생횟수를 0으로 초기화
 			searchLastFmVidieKey("alternative_folk_rock");
+			view.setTextViewInvisible();
 			view.setSeekBarMax(0);
 			view.setSeekBarPlayTime(0);
 			view.progressOn( ); // 사용자가 키를 못눌리게 한다.
@@ -224,6 +225,7 @@ public class RNBFragment extends Fragment implements ViewForRNBFragment.Controll
 			if(reloadingFlag == true) { // 다시 노래 목록을 가지고 온거라면
 				view.musicLoadingEnd( ); // 다시 프로그레스 바를 돌린다 가져올 때 까지
 				view.nextButtonClicked( ); // 다음재생 버튼을 활성화 시킨다.
+				view.setTextViewVisible();
 				reloadingFlag = false; // 플레그를 초기화 시켜주고
 				serchRTSPurlFromYouTubeServer( ); // 다시 통신을 시작한다. 시작시키기 위해서 
 			}
@@ -285,6 +287,7 @@ public class RNBFragment extends Fragment implements ViewForRNBFragment.Controll
 			mHandler.postDelayed(UpdateSongTime, 1000); // 1초마다 업데이트 한다.
 			view.setSeekBarMax(mMediaPlayer.getDuration()); // 최대 시간을 가지고 온다.
 			view.setSeekBarPlayTime(startTime);
+			view.nextButtonPregressBarOff();
 			}
 			
 			else
@@ -327,6 +330,7 @@ public class RNBFragment extends Fragment implements ViewForRNBFragment.Controll
 
 	@Override
 	public void nextMusicStart() { // 다음 노래 버튼을 클릭하였을 때
+		view.nextButtonPregressBarOn();
 		view.startButtonClicked();
 		mMediaPlayer.stop();
 		serchRTSPurlFromYouTubeServer( ); // 노래 재생	

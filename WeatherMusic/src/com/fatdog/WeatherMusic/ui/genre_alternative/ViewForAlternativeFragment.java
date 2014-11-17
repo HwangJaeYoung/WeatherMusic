@@ -110,6 +110,7 @@ public class ViewForAlternativeFragment extends AbstractViewForFragment {
 	
 	public void progressOn( ) {
 		pbMusicLoading.setVisibility(View.VISIBLE);
+		sbMusicSeekbar.setVisibility(View.INVISIBLE);
 		bt_next.setVisibility(View.INVISIBLE);
 	}
 	
@@ -137,6 +138,7 @@ public class ViewForAlternativeFragment extends AbstractViewForFragment {
 	
 	public void setAlbumCover(CoverImage anImage) {
 		ivAlbumCover.setImageUrl(anImage.getCoverURL());
+		
 	}
 	
 	public void setTextViewInvisible( ) { // 노래 불러올 때 나머지 텍스트를 보이지 않게한다.
@@ -148,6 +150,14 @@ public class ViewForAlternativeFragment extends AbstractViewForFragment {
 		tvArtist.setVisibility(View.VISIBLE);
 		tvTrack.setVisibility(View.VISIBLE);
 	}
+	
+	public void nextButtonPregressBarOn( ) {
+		pbMusicLoading.setVisibility(View.VISIBLE);
+	}
+	
+	public void nextButtonPregressBarOff( ) {
+		pbMusicLoading.setVisibility(View.INVISIBLE);
+	}	
 	
 	public void setFirstAlbumCover(String aWeatherInfo) {
 		int resourceId = 0;

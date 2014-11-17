@@ -103,6 +103,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="25dp"
         android:progressDrawable="@drawable/seekbar_progress"
+        android:visibility="invisible"
         android:thumb="@drawable/circle_thumb" />
 
     <Button

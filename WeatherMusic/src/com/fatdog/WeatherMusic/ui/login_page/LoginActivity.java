@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -46,11 +47,11 @@ public class LoginActivity extends Activity implements ViewForLoginActivity.Cont
 		view.lockButton();		
 		
 		Session.openActiveSession(this, true, new Session.StatusCallback() {
-			
 			// callback when session changes state
 			@SuppressWarnings("deprecation")
 			@Override
 			public void call(Session session, SessionState state, Exception exception) {
+				
 				if (session.isOpened()) {
 					// make request to the /me API
 					Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
@@ -70,10 +71,15 @@ public class LoginActivity extends Activity implements ViewForLoginActivity.Cont
 								Boolean check = prefs.getBoolean("favorGenre", false); // false이면 처음에 설치한 사람이다.
 								
 								if(check == false)
+								{
+									Log.i("temp", "favor");
 									intent = new Intent(LoginActivity.this, FavorGenreActivity.class); // 선호장르 페이지로 이동한다.
-								else
+								}
+									
+								else{
 									intent = new Intent(LoginActivity.this, MainActivity.class); // 그냥 메인으로 이동한다.
-								
+									Log.i("temp", "main");
+								}
 								startActivity(intent);
 								finish();
 							}
@@ -88,5 +94,6 @@ public class LoginActivity extends Activity implements ViewForLoginActivity.Cont
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+		Log.i("temp", "inlogin activiy");
 	}
 }

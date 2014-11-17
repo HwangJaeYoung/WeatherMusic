@@ -109,6 +109,7 @@ public class ViewForRNBFragment  extends AbstractViewForFragment {
 	
 	public void progressOn( ) {
 		pbRNBMusicLoading.setVisibility(View.VISIBLE);
+		sbRNBMusicSeekbar.setVisibility(View.INVISIBLE);
 		btRNBNext.setVisibility(View.INVISIBLE);
 	}
 	
@@ -136,6 +137,24 @@ public class ViewForRNBFragment  extends AbstractViewForFragment {
 	
 	public void setAlbumCover(CoverImage anImage) {
 		ivRNBAlbumCover.setImageUrl(anImage.getCoverURL());
+	}
+	
+	public void setTextViewInvisible() { // 노래 불러올 때 나머지 텍스트를 보이게 한다.
+		tvRNBArtist.setVisibility(View.VISIBLE);
+		tvRNBTrack.setVisibility(View.VISIBLE);
+	}
+	
+	public void setTextViewVisible() { // 노래 불러올 때 나머지 텍스트를 보이게 한다.
+		tvRNBArtist.setVisibility(View.VISIBLE);
+		tvRNBTrack.setVisibility(View.VISIBLE);
+	}
+	
+	public void nextButtonPregressBarOn( ) {
+		pbRNBMusicLoading.setVisibility(View.VISIBLE);
+	}
+	
+	public void nextButtonPregressBarOff( ) {
+		pbRNBMusicLoading.setVisibility(View.INVISIBLE);
 	}
 	
 	public void setFirstAlbumCover(String aWeatherInfo) {

@@ -13,9 +13,9 @@ public class TrackList {
 	private String artist;
 	
 	public TrackList(JSONObject aJSONObject) throws JSONException {
-		videoKey = aJSONObject.getJSONObject(PARM_VIDEO_KEY).getString("0");
-		title = aJSONObject.getJSONObject(PARM_TITLE).getString("0");
-		artist = aJSONObject.getJSONObject(PARM_ARTIST).getString("0");
+		videoKey = aJSONObject.getString(PARM_VIDEO_KEY);
+		title = aJSONObject.getString(PARM_TITLE);
+		artist = aJSONObject.getString(PARM_ARTIST);
 	}
 
 	public String getVideoKey() {

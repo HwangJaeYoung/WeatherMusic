@@ -7,6 +7,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
 import com.fatdog.WeatherMusic.MainActivity;
 import com.fatdog.WeatherMusic.R;
 import com.fatdog.WeatherMusic.domain.CoverImage;
@@ -19,17 +31,6 @@ import com.fatdog.WeatherMusic.reuse.network.HttpRequesterForRTSP;
 import com.fatdog.WeatherMusic.reuse.network.LastfmCoverRequest;
 import com.fatdog.WeatherMusic.reuse.network.LastfmRequest;
 import com.fatdog.WeatherMusic.reuse.network.RTSPurlRequest;
-
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 public class AccousticFragment extends Fragment implements ViewForAccousticFragement.Controller {
 	private ViewForAccousticFragement view;
@@ -44,6 +45,7 @@ public class AccousticFragment extends Fragment implements ViewForAccousticFrage
 	private Handler mHandler = new Handler( );
 	private HandlerThread mHandlerThread;
 	
+	private String weatherTag = null;
 	private String weatherString = null; // 맑음, 흐림 같은 날씨 정보를 들고 있다.
 	
 	@Override
@@ -75,7 +77,7 @@ public class AccousticFragment extends Fragment implements ViewForAccousticFrage
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		mHandlerThread = new HandlerThread("SearchThread"); // 위치추적 통신이 MainActivity에서 끝났는지 확인하기 위한 스레드
+		mHandlerThread = new HandlerThread("AcousticThread"); // 위치추적 통신이 MainActivity에서 끝났는지 확인하기 위한 스레드
 		mHandlerThread.start();
 		musicHandler = new Handler(mHandlerThread.getLooper());
 		musicHandler.post(new Runnable( ) {
@@ -87,8 +89,10 @@ public class AccousticFragment extends Fragment implements ViewForAccousticFrage
 						final WeatherInfo weatherInfo = getMainAct.getWeatherInfo();
 						
 						if(weatherInfo != null) {
-							
-							searchLastFmVidieKey("alternative_folk_rock"); // 노래를 오현 서버에 가서 가지고 온다.
+							weatherString = weatherInfo.weatherInformation();
+							weatherTag = weatherInfo.getWeatherTag();
+							Log.i("exam", weatherString);
+							searchLastFmVidieKey("acoustic_" + weatherTag); // 노래를 오현 서버에 가서 가지고 온다.
 							
 							mHandler.post(new Runnable() { // 메인 스레드 에서는 기본적인 이미지와 멘트를 추가한다.
 								public void run() {
@@ -114,9 +118,10 @@ public class AccousticFragment extends Fragment implements ViewForAccousticFrage
 	
 	public void serchRTSPurlFromYouTubeServer( ) { // rtsp프로토콜을 구글에서 가지고 온다.
 		
-		if(musicPlayCount == 10) { // 노래 목록을 모두 사용했을 경우
+		if(musicPlayCount == 5) { // 노래 목록을 모두 사용했을 경우
 			musicPlayCount = 0; // 노래 재생횟수를 0으로 초기화
-			searchLastFmVidieKey("alternative_folk_rock");
+			searchLastFmVidieKey("acoustic_" + weatherTag);
+			view.setTextViewInvisible();
 			view.setSeekBarMax(0);
 			view.setSeekBarPlayTime(0);
 			view.progressOn( ); // 사용자가 키를 못눌리게 한다.
@@ -207,7 +212,7 @@ public class AccousticFragment extends Fragment implements ViewForAccousticFrage
 				e.printStackTrace();
 			}
 			
-			for(int i = 0; i < 10; i++) { // 노래를 10곡 가지고 온다.
+			for(int i = 0; i < 5; i++) { // 노래를 10곡 가지고 온다.
 				try {
 					TrackList tr = new TrackList(tempJSONArray.getJSONObject(i));
 					trackInfo.add(tr);	
@@ -226,6 +231,7 @@ public class AccousticFragment extends Fragment implements ViewForAccousticFrage
 			if(reloadingFlag == true) { // 다시 노래 목록을 가지고 온거라면
 				view.musicLoadingEnd( ); // 다시 프로그레스 바를 돌린다 가져올 때 까지
 				view.nextButtonClicked( ); // 다음재생 버튼을 활성화 시킨다.
+				view.setTextViewVisible();
 				reloadingFlag = false; // 플레그를 초기화 시켜주고
 				serchRTSPurlFromYouTubeServer( ); // 다시 통신을 시작한다. 시작시키기 위해서 
 			}
@@ -287,6 +293,7 @@ public class AccousticFragment extends Fragment implements ViewForAccousticFrage
 			mHandler.postDelayed(UpdateSongTime, 1000); // 1초마다 업데이트 한다.
 			view.setSeekBarMax(mMediaPlayer.getDuration()); // 최대 시간을 가지고 온다.
 			view.setSeekBarPlayTime(startTime);
+			view.nextButtonPregressBarOff();
 			}
 			
 			else
@@ -329,6 +336,7 @@ public class AccousticFragment extends Fragment implements ViewForAccousticFrage
 
 	@Override
 	public void nextMusicStart() { // 다음 노래 버튼을 클릭하였을 때
+		view.nextButtonPregressBarOn();
 		view.startButtonClicked();
 		mMediaPlayer.stop();
 		serchRTSPurlFromYouTubeServer( ); // 노래 재생	

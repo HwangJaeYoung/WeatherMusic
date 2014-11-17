@@ -111,6 +111,7 @@ public class ViewForHipHopFragment extends AbstractViewForFragment {
 	
 	public void progressOn( ) {
 		pbHipHopMusicLoading.setVisibility(View.VISIBLE);
+		sbHipHopMusicSeekbar.setVisibility(View.INVISIBLE);
 		btHipHopNext.setVisibility(View.INVISIBLE);
 	}
 	
@@ -138,6 +139,24 @@ public class ViewForHipHopFragment extends AbstractViewForFragment {
 	
 	public void nextButtonClicked( ) {
 		btHipHopNext.setVisibility(View.VISIBLE);
+	}
+	
+	public void setTextViewInvisible( ) { // 노래 불러올 때 나머지 텍스트를 보이지 않게한다.
+		tvHipHopArtist.setVisibility(View.INVISIBLE);
+		tvHipHopTrack.setVisibility(View.INVISIBLE);
+	}
+	
+	public void setTextViewVisible() { // 노래 불러올 때 나머지 텍스트를 보이게 한다.
+		tvHipHopArtist.setVisibility(View.VISIBLE);
+		tvHipHopTrack.setVisibility(View.VISIBLE);
+	}
+	
+	public void nextButtonPregressBarOn( ) {
+		pbHipHopMusicLoading.setVisibility(View.VISIBLE);
+	}
+	
+	public void nextButtonPregressBarOff( ) {
+		pbHipHopMusicLoading.setVisibility(View.INVISIBLE);
 	}
 	
 	public void setFirstAlbumCover(String aWeatherInfo) {

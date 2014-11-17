@@ -43,7 +43,7 @@ public class AlternativeFragment extends Fragment implements ViewForAlternativeF
 	private Handler musicHandler;
 	private Handler mHandler = new Handler( );
 	private HandlerThread mHandlerThread;
-	
+	private String weatherTag = null;
 	private String weatherString = null; // 맑음, 흐림 같은 날씨 정보를 들고 있다.
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +61,7 @@ public class AlternativeFragment extends Fragment implements ViewForAlternativeF
         mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() { // 노래를 다 들었을 경우에
 			@Override
 			public void onCompletion(MediaPlayer mp) {
+				view.nextButtonPregressBarOn();
 				mMediaPlayer.stop();
 				view.setSeekBarMax(0);
 				view.setSeekBarPlayTime(0);
@@ -74,7 +75,7 @@ public class AlternativeFragment extends Fragment implements ViewForAlternativeF
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		mHandlerThread = new HandlerThread("SearchThread"); // 위치추적 통신이 MainActivity에서 끝났는지 확인하기 위한 스레드
+		mHandlerThread = new HandlerThread("AlternativeThread"); // 위치추적 통신이 MainActivity에서 끝났는지 확인하기 위한 스레드
 		mHandlerThread.start();
 		musicHandler = new Handler(mHandlerThread.getLooper());
 		musicHandler.post(new Runnable( ) {
@@ -86,12 +87,12 @@ public class AlternativeFragment extends Fragment implements ViewForAlternativeF
 						final WeatherInfo weatherInfo = getMainAct.getWeatherInfo();
 						
 						if(weatherInfo != null) {
-							
-							searchLastFmVidieKey("alternative_folk_rock"); // 노래를 오현 서버에 가서 가지고 온다.
+							weatherString = weatherInfo.weatherInformation();
+							weatherTag = weatherInfo.getWeatherTag();
+							searchLastFmVidieKey("alternative_" + weatherTag); // 노래를 오현 서버에 가서 가지고 온다.
 							
 							mHandler.post(new Runnable() { // 메인 스레드 에서는 기본적인 이미지와 멘트를 추가한다.
 								public void run() {
-									weatherString = weatherInfo.weatherInformation();
 									view.setFirstAlbumCover(weatherString);
 									view.setFirstWeatherInfo(weatherString);
 								}
@@ -113,9 +114,9 @@ public class AlternativeFragment extends Fragment implements ViewForAlternativeF
 	
 	public void serchRTSPurlFromYouTubeServer( ) { // rtsp프로토콜을 구글에서 가지고 온다.
 		
-		if(musicPlayCount == 10) { // 노래 목록을 모두 사용했을 경우
+		if(musicPlayCount == 5) { // 노래 목록을 모두 사용했을 경우
 			musicPlayCount = 0; // 노래 재생횟수를 0으로 초기화
-			searchLastFmVidieKey("alternative_folk_rock");
+			searchLastFmVidieKey("alternative_" + weatherTag);
 			view.setTextViewInvisible();
 			view.setSeekBarMax(0);
 			view.setSeekBarPlayTime(0);
@@ -199,6 +200,7 @@ public class AlternativeFragment extends Fragment implements ViewForAlternativeF
 	HttpRequesterForLastFm.NetworkResponseListener getLastFmListener = new HttpRequesterForLastFm.NetworkResponseListener( )  {
 		@Override
 		public void onSuccess(JSONObject jsonObject) {
+			
 			JSONArray tempJSONArray = new JSONArray( );
 			try {
 				tempJSONArray = jsonObject.getJSONArray("track_list");
@@ -206,7 +208,7 @@ public class AlternativeFragment extends Fragment implements ViewForAlternativeF
 				e.printStackTrace();
 			}
 			
-			for(int i = 0; i < 10; i++) { // 노래를 10곡 가지고 온다.
+			for(int i = 0; i < 5; i++) { // 노래를 10곡 가지고 온다.
 				try {
 					TrackList tr = new TrackList(tempJSONArray.getJSONObject(i));
 					trackInfo.add(tr);	
@@ -287,6 +289,7 @@ public class AlternativeFragment extends Fragment implements ViewForAlternativeF
 			mHandler.postDelayed(UpdateSongTime, 1000); // 1초마다 업데이트 한다.
 			view.setSeekBarMax(mMediaPlayer.getDuration()); // 최대 시간을 가지고 온다.
 			view.setSeekBarPlayTime(startTime);
+			view.nextButtonPregressBarOff();
 			}
 			
 			else
@@ -329,6 +332,7 @@ public class AlternativeFragment extends Fragment implements ViewForAlternativeF
 
 	@Override
 	public void nextMusicStart() { // 다음 노래 버튼을 클릭하였을 때
+		view.nextButtonPregressBarOn();
 		view.startButtonClicked();
 		mMediaPlayer.stop();
 		serchRTSPurlFromYouTubeServer( ); // 노래 재생	
