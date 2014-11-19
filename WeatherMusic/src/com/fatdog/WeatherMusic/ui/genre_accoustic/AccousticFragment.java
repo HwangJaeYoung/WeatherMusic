@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import com.fatdog.WeatherMusic.reuse.network.HttpRequesterForRTSP;
 import com.fatdog.WeatherMusic.reuse.network.LastfmCoverRequest;
 import com.fatdog.WeatherMusic.reuse.network.LastfmRequest;
 import com.fatdog.WeatherMusic.reuse.network.RTSPurlRequest;
+import com.fatdog.WeatherMusic.ui.favor_genrelist_page.FavorListActivity;
 
 public class AccousticFragment extends Fragment implements ViewForAccousticFragement.Controller {
 	private ViewForAccousticFragement view;
@@ -47,6 +49,11 @@ public class AccousticFragment extends Fragment implements ViewForAccousticFrage
 	
 	private String weatherTag = null;
 	private String weatherString = null; // 맑음, 흐림 같은 날씨 정보를 들고 있다.
+	
+	private String videoKey;
+	private String coverURL;
+	private String artist;
+	private String title;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -138,12 +145,16 @@ public class AccousticFragment extends Fragment implements ViewForAccousticFrage
 			musicPlayCount++; // 한곡을 들었다.
 
 			view.setMusicTitle(tr.getTitle());
-			view.setMusicArtist(tr.getArtist());
-
+			view.setMusicArtist(tr.getArtist());	
+			
+			videoKey = tr.getVideoKey();
+			title = tr.getTitle();
+			artist = tr.getArtist();
+			
 			RTSPurlRequest RTSPurlRequest = new RTSPurlRequest(getActivity());
+			
 			try {
-				RTSPurlRequest.getRTSTurlAbuoutYouTubeUrl(tr.getVideoKey(),
-						getRTSPListener);
+				RTSPurlRequest.getRTSTurlAbuoutYouTubeUrl(tr.getVideoKey(),getRTSPListener);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -195,6 +206,7 @@ public class AccousticFragment extends Fragment implements ViewForAccousticFrage
 					e.printStackTrace();
 				}
 			}
+			coverURL = image.getCoverURL();
 			view.setAlbumCover(image); // 가지고 온 앨범 커버 이미지를 교체한다.
 		}
 		
@@ -250,7 +262,6 @@ public class AccousticFragment extends Fragment implements ViewForAccousticFrage
 			
 			try {
 				tempJsonArray = jsonObject.getJSONObject("media$group").getJSONArray("media$content");
-				
 				
 				for(int i = 0; i < tempJsonArray.length(); i++) {
 					JSONObject urlObject = tempJsonArray.getJSONObject(i);
@@ -344,11 +355,17 @@ public class AccousticFragment extends Fragment implements ViewForAccousticFrage
 
 	@Override
 	public void clickLike() {
-		Toast.makeText(getActivity(), R.string.ready_toast, Toast.LENGTH_SHORT).show();
+		
+		if(videoKey == null || title == null || coverURL == null || artist == null) {
+			Toast.makeText(getActivity(), R.string.not_filldata_toast, Toast.LENGTH_SHORT).show();
+		} else {
+			
+		}
 	}
 
 	@Override
 	public void clickList() {
-		Toast.makeText(getActivity(), R.string.ready_toast, Toast.LENGTH_SHORT).show();
+		Intent intent = new Intent(getActivity( ), FavorListActivity.class);
+		startActivity(intent);
 	}
 }

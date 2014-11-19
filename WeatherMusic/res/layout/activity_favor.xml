@@ -4,44 +4,58 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/bt_favor_page_alternative"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:text="Alternative"
-        android:textColor="#fff"
-        android:textSize="20sp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
-    <Button
-        android:id="@+id/bt_favor_page_hiphop"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:text="HipHop"
-        android:textColor="#fff"
-        android:textSize="20sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:text="선호하는 장르를 선택 해 주세요"
+            android:textColor="#9e9e9e"
+            android:textSize="15dp" />
 
-    <Button
-        android:id="@+id/bt_favor_page_accoustic"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:text="Accoustic"
-        android:textColor="#fff"
-        android:textSize="20sp" />
+        <View
+            android:id="@+id/tip"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
 
-    <Button
-        android:id="@+id/bt_favor_page_rnb"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:text="R and B"
-        android:textColor="#fff"
-        android:textSize="20sp" />
-    
-    <Button
-        android:id="@+id/bt_exam"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:text="go youtube page"
-        android:textColor="#fff"
-        android:textSize="20sp" />
+        <Button
+            android:id="@+id/bt_favor_page_alternative"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:layout_above="@id/tip"
+            android:layout_toLeftOf="@id/tip"
+            android:background="@drawable/favor_alternative" />
+
+        <Button
+            android:id="@+id/bt_favor_page_hiphop"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:layout_below="@id/tip"
+            android:layout_toLeftOf="@id/tip"
+            android:background="@drawable/favor_hiphop" />
+
+        <Button
+            android:id="@+id/bt_favor_page_accoustic"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:layout_below="@id/tip"
+            android:layout_toRightOf="@id/tip"
+            android:background="@drawable/favor_acoustic" />
+
+        <Button
+            android:id="@+id/bt_favor_page_rnb"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:layout_above="@id/tip"
+            android:layout_toRightOf="@id/tip"
+            android:background="@drawable/favor_rnb" />
+    </RelativeLayout>
 
 </LinearLayout>

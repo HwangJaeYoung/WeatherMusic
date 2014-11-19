@@ -15,8 +15,6 @@ public class ViewForFavorGenreActivity extends AbstractViewForActivity{
 	private Button btFavorPageAccoustic;
 	private Button btFavorPageRNB;
 	
-	private Button btExam;
-	
 	private Controller controller;
 	
 	public ViewForFavorGenreActivity(Context context, Controller aController) {
@@ -35,8 +33,6 @@ public class ViewForFavorGenreActivity extends AbstractViewForActivity{
 		btFavorPageHipHop = (Button)findViewById(R.id.bt_favor_page_hiphop);
 		btFavorPageAccoustic = (Button)findViewById(R.id.bt_favor_page_accoustic);
 		btFavorPageRNB = (Button)findViewById(R.id.bt_favor_page_rnb);
-		
-		btExam = (Button)findViewById(R.id.bt_exam);
 	}
 
 	@Override
@@ -69,15 +65,6 @@ public class ViewForFavorGenreActivity extends AbstractViewForActivity{
 			@Override
 			public void onClick(View v) {
 				controller.rnbClick();
-			}
-		});
-		
-		btExam.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				controller.goYoutube();
-				
 			}
 		});
 	}

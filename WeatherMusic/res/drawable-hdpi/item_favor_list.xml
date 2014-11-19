@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+    <RelativeLayout
+        android:layout_width="100dp"
+        android:layout_height="80dp" >
+
+        <com.fatdog.WeatherMusic.reuse.etc.CircularImageView
+            android:id="@+id/iv_favor_album_cover"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:scaleType="centerCrop" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp" >
+
+        <View
+            android:id="@+id/tip"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:id="@+id/tv_favor_track"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/tip"
+            android:text="New Love"
+            android:textColor="#666"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/tv_favor_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tip"
+            android:text="Maroon 5"
+            android:textColor="#9e9e9e"
+            android:textSize="15dp" />
+    </RelativeLayout>
+
+</LinearLayout>
