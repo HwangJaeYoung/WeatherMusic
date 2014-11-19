@@ -1,6 +1,7 @@
 package com.fatdog.WeatherMusic.reuse.favor_genre_page;
 
 import com.fatdog.WeatherMusic.MainActivity;
+import com.fatdog.WeatherMusic.ui.youtube_page.YoutubeActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -64,5 +65,11 @@ public class FavorGenreActivity extends Activity implements ViewForFavorGenreAct
 		} else if(check == true) {
 			finish( );			
 		}
+	}
+
+	@Override
+	public void goYoutube() {
+		Intent intent = new Intent(FavorGenreActivity.this, YoutubeActivity.class); // 그냥 메인으로 이동한다.
+		startActivity(intent);
 	}
 }

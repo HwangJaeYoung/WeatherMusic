@@ -36,7 +36,10 @@ public class ViewForArrayAdapterForFavor extends AbstractViewForListViewItem {
 		
 	}
 	
-	public static class FavorMusicItem implements IListViewItem {
-
+	public static interface IFavorList extends IListViewItem {
+		public String getViedoKey( );
+		public String getArtist( );
+		public String getTitle( );
+		public String getCoverURL( );
 	}
 }

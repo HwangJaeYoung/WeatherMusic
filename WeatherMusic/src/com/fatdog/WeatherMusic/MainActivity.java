@@ -36,7 +36,7 @@ import com.fatdog.WeatherMusic.reuse.network.HttpRequester;
 import com.fatdog.WeatherMusic.ui.genre_accoustic.AccousticFragment;
 import com.fatdog.WeatherMusic.ui.genre_alternative.AlternativeFragment;
 import com.fatdog.WeatherMusic.ui.genre_hiphop.HipHopFragment;
-import com.fatdog.WeatherMusic.ui.genre_rnb.RNBFragment;
+import com.fatdog.WeatherMusic.ui.genre_rnb.TempFragment;
 import com.fatdog.WeatherMusic.ui.navigation_drawer_menu.NavigationDrawerFragment;
 import com.naver.wcs.WCSLogEventAPI;
 
@@ -105,7 +105,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 	transaction.replace(R.id.container, new AccousticFragment()).commit();
                     break;
                 case 3:
-                	transaction.replace(R.id.container, new RNBFragment()).commit();
+                	transaction.replace(R.id.container, new TempFragment()).commit();
                     break;
                 default: // etc...
                     break;

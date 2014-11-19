@@ -35,5 +35,13 @@
         android:text="R and B"
         android:textColor="#fff"
         android:textSize="20sp" />
+    
+    <Button
+        android:id="@+id/bt_exam"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:text="go youtube page"
+        android:textColor="#fff"
+        android:textSize="20sp" />
 
 </LinearLayout>

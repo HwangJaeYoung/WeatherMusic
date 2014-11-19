@@ -1,5 +1,5 @@
 package com.fatdog.WeatherMusic.domain;
 
-public class FavorList {
+public class FavorList extends IFavorList{
 
 }

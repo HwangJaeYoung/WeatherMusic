@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fatdog.WeatherMusic"
-    android:versionCode="2"
-    android:versionName="0.2" >
+    android:versionCode="4"
+    android:versionName="0.4" >
 
     <uses-sdk
         android:minSdkVersion="13"
@@ -40,6 +40,14 @@
         </activity>
         <activity
             android:name="com.fatdog.WeatherMusic.reuse.favor_genre_page.FavorGenreActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.fatdog.WeatherMusic.ui.youtube_page.YoutubeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.fatdog.WeatherMusic.ui.favor_genrelist_page.FavorListActivity"
             android:screenOrientation="portrait" >
         </activity>
 
