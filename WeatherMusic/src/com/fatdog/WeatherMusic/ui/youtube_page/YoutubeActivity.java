@@ -1,15 +1,9 @@
 package com.fatdog.WeatherMusic.ui.youtube_page;
 
 import android.app.Activity;
-import android.content.Context;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Window;
 import android.view.WindowManager;
-
-import com.fatdog.WeatherMusic.reuse.etc.BackPressCloseHandler;
-import com.fatdog.WeatherMusic.ui.login_page.ViewForLoginActivity;
 
 public class YoutubeActivity extends Activity {
 	

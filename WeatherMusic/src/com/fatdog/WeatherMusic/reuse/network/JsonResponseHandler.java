@@ -23,6 +23,7 @@ public class JsonResponseHandler extends JsonHttpResponseHandler {
     // Fired when a request returns successfully
     @Override
     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+    	Log.i("whywhy", "jsonresopnse");
     	Log.i("json", response.toString());
         try {
 			this.networkResponseListener.onSuccess(response.getJSONObject(PARM_RESPONSE).getJSONObject(PARM_BODY).getJSONObject(PARM_ITEMS));
@@ -34,6 +35,7 @@ public class JsonResponseHandler extends JsonHttpResponseHandler {
     // Returns when request failed
     @Override
     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+    	Log.i("whywhy", "jsonresopnsefail");
     	this.networkResponseListener.onFail( );
     }
 }

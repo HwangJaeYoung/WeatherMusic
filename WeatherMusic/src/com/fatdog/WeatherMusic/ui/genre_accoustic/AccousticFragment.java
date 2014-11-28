@@ -7,7 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -355,17 +354,11 @@ public class AccousticFragment extends Fragment implements ViewForAccousticFrage
 
 	@Override
 	public void clickLike() {
-		
-		if(videoKey == null || title == null || coverURL == null || artist == null) {
-			Toast.makeText(getActivity(), R.string.not_filldata_toast, Toast.LENGTH_SHORT).show();
-		} else {
-			
-		}
+		Toast.makeText(getActivity(), R.string.ready_toast, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void clickList() {
-		Intent intent = new Intent(getActivity( ), FavorListActivity.class);
-		startActivity(intent);
+		Toast.makeText(getActivity(), R.string.ready_toast, Toast.LENGTH_SHORT).show();
 	}
 }

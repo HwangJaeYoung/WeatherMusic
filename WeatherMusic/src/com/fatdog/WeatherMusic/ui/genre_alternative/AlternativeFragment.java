@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,6 +89,7 @@ public class AlternativeFragment extends Fragment implements ViewForAlternativeF
 						
 						if(weatherInfo != null) {
 							weatherString = weatherInfo.weatherInformation();
+							Log.i("whywhy", weatherString);
 							weatherTag = weatherInfo.getWeatherTag();
 							searchLastFmVidieKey("alternative_" + weatherTag); // 노래를 오현 서버에 가서 가지고 온다.
 							

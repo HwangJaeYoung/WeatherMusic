@@ -45,6 +45,7 @@ public class RNBFragment extends Fragment implements ViewForRNBFragment.Controll
 	private HandlerThread mHandlerThread;
 	
 	private String weatherString = null; // 맑음, 흐림 같은 날씨 정보를 들고 있다.
+	private String weatherTag = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,8 +88,9 @@ public class RNBFragment extends Fragment implements ViewForRNBFragment.Controll
 						final WeatherInfo weatherInfo = getMainAct.getWeatherInfo();
 						
 						if(weatherInfo != null) {
-							
-							searchLastFmVidieKey("alternative_folk_rock"); // 노래를 오현 서버에 가서 가지고 온다.
+							weatherString = weatherInfo.weatherInformation();
+							weatherTag = weatherInfo.getWeatherTag();
+							searchLastFmVidieKey("rnb_" + weatherTag); // 노래를 오현 서버에 가서 가지고 온다.
 							
 							mHandler.post(new Runnable() { // 메인 스레드 에서는 기본적인 이미지와 멘트를 추가한다.
 								public void run() {
@@ -114,15 +116,17 @@ public class RNBFragment extends Fragment implements ViewForRNBFragment.Controll
 	
 	public void serchRTSPurlFromYouTubeServer( ) { // rtsp프로토콜을 구글에서 가지고 온다.
 		
-		if(musicPlayCount == 10) { // 노래 목록을 모두 사용했을 경우
+		if(musicPlayCount == 5) { // 노래 목록을 모두 사용했을 경우
 			musicPlayCount = 0; // 노래 재생횟수를 0으로 초기화
-			searchLastFmVidieKey("alternative_folk_rock");
+			searchLastFmVidieKey("rnb_" + weatherTag);
 			view.setTextViewInvisible();
 			view.setSeekBarMax(0);
 			view.setSeekBarPlayTime(0);
 			view.progressOn( ); // 사용자가 키를 못눌리게 한다.
 			trackInfo.clear(); // 리스트를 초기화 시켜준다.
 			reloadingFlag = true; // 다시 로드 했다는 것을 알려준다.
+			
+			view.setFirstAlbumCover(weatherString);
 		}
 		
 		else { // 일반적인 통신
@@ -206,7 +210,7 @@ public class RNBFragment extends Fragment implements ViewForRNBFragment.Controll
 				e.printStackTrace();
 			}
 			
-			for(int i = 0; i < 10; i++) { // 노래를 10곡 가지고 온다.
+			for(int i = 0; i < 5; i++) { // 노래를 10곡 가지고 온다.
 				try {
 					TrackList tr = new TrackList(tempJSONArray.getJSONObject(i));
 					trackInfo.add(tr);	

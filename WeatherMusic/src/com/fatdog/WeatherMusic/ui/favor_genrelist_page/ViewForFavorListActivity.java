@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.fatdog.WeatherMusic.R;
-import com.fatdog.WeatherMusic.reuse.listview.mvc.IListViewItem;
 import com.fatdog.WeatherMusic.reuse.mvc.activity.AbstractViewForActivity;
 
 public class ViewForFavorListActivity extends AbstractViewForActivity {

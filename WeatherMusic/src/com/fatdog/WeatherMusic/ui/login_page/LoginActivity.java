@@ -10,7 +10,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -20,7 +19,6 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 import com.fatdog.WeatherMusic.MainActivity;
-import com.fatdog.WeatherMusic.R;
 import com.fatdog.WeatherMusic.reuse.etc.BackPressCloseHandler;
 import com.fatdog.WeatherMusic.reuse.etc.WeatherMusicApplication;
 import com.fatdog.WeatherMusic.reuse.favor_genre_page.FavorGenreActivity;

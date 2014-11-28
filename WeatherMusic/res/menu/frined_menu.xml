@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/kakao"
+        android:title="카카오톡 친구 공유"/>
+    <item
+        android:id="@+id/face"
+        android:title="페이스북 친구 공유"/>
+
+</menu>

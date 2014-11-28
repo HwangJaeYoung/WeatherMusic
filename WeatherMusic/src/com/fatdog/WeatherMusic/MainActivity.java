@@ -23,6 +23,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -36,7 +39,7 @@ import com.fatdog.WeatherMusic.reuse.network.HttpRequester;
 import com.fatdog.WeatherMusic.ui.genre_accoustic.AccousticFragment;
 import com.fatdog.WeatherMusic.ui.genre_alternative.AlternativeFragment;
 import com.fatdog.WeatherMusic.ui.genre_hiphop.HipHopFragment;
-import com.fatdog.WeatherMusic.ui.genre_rnb.TempFragment;
+import com.fatdog.WeatherMusic.ui.genre_rnb.RNBFragment;
 import com.fatdog.WeatherMusic.ui.navigation_drawer_menu.NavigationDrawerFragment;
 import com.naver.wcs.WCSLogEventAPI;
 
@@ -105,7 +108,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 	transaction.replace(R.id.container, new AccousticFragment()).commit();
                     break;
                 case 3:
-                	transaction.replace(R.id.container, new TempFragment()).commit();
+                	transaction.replace(R.id.container, new RNBFragment()).commit();
                     break;
                 default: // etc...
                     break;
@@ -205,10 +208,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	
 	public void getTodayWeather(int aNX, int aNY) { // 현재 위치에 따른 현재의 날씨를 가지고 온다.
 		DateCalculation date = new DateCalculation();
-		
+
 		CurrentWeatherRequest currentWeatherRequest = new CurrentWeatherRequest(getApplicationContext());
 		try {
-			Log.i("temp", date.getHour());
+
 			currentWeatherRequest.getTodayWeather(getCurrentState, date.getHour(), date.getTodayDate(), aNX, aNY);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -220,7 +223,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		@Override
 		public void onSuccess(JSONObject jsonObject) {
 			JSONArray jsonArray = new JSONArray( );
-			
 			try {
 				jsonArray = jsonObject.getJSONArray("item");
 			} catch (JSONException e) {
@@ -244,13 +246,15 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 			
 			// 기상청에서 데이터를 주지 않는 경우가 있기 때문에 디폴트 값
 			if(skyValue == null)
-				ptyValue = "1"; // 맑음 디폴트
+				skyValue = "1"; // 맑음 디폴트
 			
 			if(ptyValue == null)
 				ptyValue = "0";
 			
 			DateCalculation date = new DateCalculation();
 			weatherInfo = new WeatherInfo(skyValue, ptyValue, date.getHour()); // 도메인 생성한다.
+			
+			// weatherInfo = new WeatherInfo("1", "0", "1400"); // 도메인 생성한다.
 
 			LOCATION_SEARCH_END = 1; // 위치추적 통신이 끝났다는 것을 프래그먼트에게 알려준다.	
 		}
@@ -274,5 +278,26 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	public void settingClick() {
 		Intent intent = new Intent(MainActivity.this, FavorGenreActivity.class);
 		startActivity(intent);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.frined_menu, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+		case R.id.kakao:
+			Toast.makeText(getApplicationContext(), "카카오톡 친구 초대", Toast.LENGTH_SHORT).show();
+			return true;
+		case R.id.face :
+			Toast.makeText(getApplicationContext(), "페이스북 친구 초대", Toast.LENGTH_SHORT).show();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 }
